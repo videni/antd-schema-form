@@ -28,7 +28,7 @@ function NumberField(props: PropsWithChildren<FormNumberProps>): React.ReactElem
 
   if (!('form' in context)) return null; // 类型判断
 
-  const { form, customComponent, languagePack }: ContextValue = context;
+  const { form, registry, languagePack }: ContextValue = context;
   const { root, required }: FormNumberProps = props; // type=object时，会判断key是否存在于required数组中
   const {
     type,
@@ -46,10 +46,10 @@ function NumberField(props: PropsWithChildren<FormNumberProps>): React.ReactElem
 
   let element: React.ReactNode = null;
 
-  if (customComponent) {
-    element = ($componentType && $componentType in customComponent)
-      ? customComponent[$componentType](root, option, form, required)
-      : createElement(customComponent.defaultNumber, [root, option, form, required]);
+  if (registry) {
+    element = ($componentType && $componentType in registry)
+      ? registry[$componentType](root, option, form, required)
+      : createElement(registry.defaultNumber, [root, option, form, required]);
   }
 
   return (

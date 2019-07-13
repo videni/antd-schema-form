@@ -37,7 +37,7 @@ function ObjectField(props: PropsWithChildren<FormObjectProps>): React.ReactElem
 
   if (!('form' in context)) return null; // 类型判断
 
-  const { form, customComponent, languagePack }: ContextValue = context;
+  const { form, registry, languagePack }: ContextValue = context;
   const {
     root: formObjectRoot,
     onOk,
@@ -111,10 +111,10 @@ function ObjectField(props: PropsWithChildren<FormObjectProps>): React.ReactElem
 
     let oneOfElement: React.ReactNode = null;
 
-    if (customComponent) {
-      oneOfElement = $oneOfComponentType && $oneOfComponentType in customComponent
-        ? customComponent[$oneOfComponentType](root, form, element)
-        : createElement(customComponent.defaultOneOf, [root, form, element]);
+    if (registry) {
+      oneOfElement = $oneOfComponentType && $oneOfComponentType in registry
+        ? registry[$oneOfComponentType](root, form, element)
+        : createElement(registry.defaultOneOf, [root, form, element]);
     }
 
     return oneOfElement;
@@ -176,8 +176,8 @@ function ObjectField(props: PropsWithChildren<FormObjectProps>): React.ReactElem
       <span className={ styleName('object-description') } key="description">{ description }</span>
     ];
 
-    return (customComponent && $componentType && $componentType in customComponent)
-      ? customComponent[$componentType](root, form, element)
+    return (registry && $componentType && $componentType in registry)
+      ? registry[$componentType](root, form, element)
       : (
         <Collapse key={ id } className={ styleName('object-collapse') } defaultActiveKey={ [id] }>
           <Collapse.Panel key={ id } header={ header }>

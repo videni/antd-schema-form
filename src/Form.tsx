@@ -18,7 +18,7 @@ export interface FormProps extends FormComponentProps {
   okText?: string | number;
   cancelText?: string | number;
   footer?: Function;
-  customComponent?: {
+  registry?: {
     [key: string]: Function;
   };
   customTableRender?: object;
@@ -35,7 +35,7 @@ function Form(props: PropsWithChildren<FormProps>): React.ReactElement | null {
     okText,
     cancelText,
     footer,
-    customComponent,
+    registry,
     customTableRender
   }: FormProps = props;
   // 获取系统语言
@@ -49,7 +49,7 @@ function Form(props: PropsWithChildren<FormProps>): React.ReactElement | null {
 
   const contextValue: ContextValue = {
     form,
-    customComponent,
+    registry,
     customTableRender,
     language,           // 系统语言
     languagePack: langP // 语言包
@@ -89,13 +89,13 @@ Form.propTypes = {
     PropTypes.number
   ]),
   footer: PropTypes.func,
-  customComponent: PropTypes.objectOf(PropTypes.func),
+  registry: PropTypes.objectOf(PropTypes.func),
   customTableRender: PropTypes.objectOf(PropTypes.func),
   languagePack: PropTypes.object
 };
 
 Form.defaultProps = {
-  customComponent: {},
+  registry: {},
   customTableRender: {}
 };
 

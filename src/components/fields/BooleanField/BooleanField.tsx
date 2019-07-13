@@ -25,7 +25,7 @@ function BooleanField(props: PropsWithChildren<FormBooleanProps>): React.ReactEl
 
   if (!('form' in context)) return null; // 类型判断
 
-  const { form, customComponent }: ContextValue = context;
+  const { form, registry }: ContextValue = context;
   const { root, required }: FormBooleanProps = props;
   const { title, description, $componentType, $defaultValue, $hidden }: BooleanItem = root;
   const option: GetFieldDecoratorOptions = {
@@ -37,10 +37,10 @@ function BooleanField(props: PropsWithChildren<FormBooleanProps>): React.ReactEl
 
   let element: React.ReactNode = null;
 
-  if (customComponent) {
-    element = ($componentType && $componentType in customComponent)
-      ? customComponent[$componentType](root, option, form, required)
-      : createElement(customComponent.defaultBoolean, [root, option, form, required]);
+  if (registry) {
+    element = ($componentType && $componentType in registry)
+      ? registry[$componentType](root, option, form, required)
+      : createElement(registry.defaultBoolean, [root, option, form, required]);
   }
 
   return (

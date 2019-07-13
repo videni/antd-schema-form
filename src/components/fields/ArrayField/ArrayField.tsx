@@ -27,7 +27,7 @@ function ArrayField(props: PropsWithChildren<FormArrayProps>): React.ReactElemen
 
   if (!('form' in context)) return null; // 类型判断
 
-  const { form, customComponent, languagePack }: ContextValue = context;
+  const { form, registry, languagePack }: ContextValue = context;
   const { root, required }: FormArrayProps = props;
   const { title, description, $componentType, $defaultValue, $hidden }: ArrayItem = root;
   const rules: Array<ValidationRule> = createArrayRules(languagePack, root, required);
@@ -39,14 +39,14 @@ function ArrayField(props: PropsWithChildren<FormArrayProps>): React.ReactElemen
 
   let element: React.ReactNode = null;
 
-  if (customComponent) {
+  if (registry) {
     // TODO: 此处渲染的是CheckBox.Group，但是组件名称是"checkbox"
     const cType: string | undefined = $componentType === 'checkbox' ? 'checkboxGroup' : $componentType;
 
-    if (cType && cType in customComponent) {
-      element = customComponent[cType](root, option, form, required);
+    if (cType && cType in registry) {
+      element = registry[cType](root, option, form, required);
     } else {
-      element = createElement(customComponent.defaultArray, [root, option, form, required]);
+      element = createElement(registry.defaultArray, [root, option, form, required]);
       isTableComponent = true;
     }
   }

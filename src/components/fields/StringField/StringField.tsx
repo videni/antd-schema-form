@@ -30,7 +30,7 @@ function StringField(props: PropsWithChildren<StringFieldProps>): React.ReactEle
 
   if (!('form' in context)) return null; // 类型判断
 
-  const { form, customComponent, languagePack }: ContextValue = context;
+  const { form, registry, languagePack }: ContextValue = context;
   const { root, required }: StringFieldProps = props; // type=object时，会判断key是否存在于required数组中
   const {
     title,
@@ -52,10 +52,10 @@ function StringField(props: PropsWithChildren<StringFieldProps>): React.ReactEle
 
   let element: React.ReactNode = null;
 
-  if (customComponent) {
-    element = ($componentType && $componentType in customComponent)
-      ? customComponent[$componentType](root, option, form, required)
-      : createElement(customComponent.defaultString, [root, option, form, required]);
+  if (registry) {
+    element = ($componentType && $componentType in registry)
+      ? registry[$componentType](root, option, form, required)
+      : createElement(registry.defaultString, [root, option, form, required]);
   }
 
   return (

@@ -14,7 +14,7 @@ import {
   defaultOneOf
 } from './components/widget/widget';
 
-const customComponent: object = {
+const registry: object = {
   defaultString,
   textArea,
   select,
@@ -31,4 +31,4 @@ const customComponent: object = {
   defaultOneOf
 };
 
-export default customComponent;
+export default registry;
