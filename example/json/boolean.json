@@ -22,7 +22,7 @@
       "type": "boolean",
       "title": "开关",
       "description": "开关",
-      "$componentType": "switch"
+      "$widget": "switch"
     }
   }
 }

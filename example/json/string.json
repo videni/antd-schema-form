@@ -87,14 +87,14 @@
       "type": "string",
       "title": "文本域",
       "description": "文本域组件",
-      "$componentType": "textArea"
+      "$widget": "textArea"
     },
     "select": {
       "id": "$root/properties/string/properties/select",
       "type": "string",
       "title": "下拉框组件",
       "description": "下拉框组件",
-      "$componentType": "select",
+      "$widget": "select",
       "$options": [
         {
           "label": "选项1",
@@ -111,7 +111,7 @@
       "type": "string",
       "title": "单选框组件",
       "description": "单选框组件",
-      "$componentType": "radio",
+      "$widget": "radio",
       "$options": [
         {
           "label": "选项1",
@@ -128,7 +128,7 @@
       "type": "string",
       "title": "日期组件",
       "description": "日期组件",
-      "$componentType": "date",
+      "$widget": "date",
       "$defaultValue": "2010-12-15 08:12:14"
     },
     "password": {
@@ -136,7 +136,7 @@
       "type": "string",
       "title": "密码",
       "description": "密码",
-      "$componentType": "password",
+      "$widget": "password",
       "$placeholder": "请输入密码"
     },
     "custom": {
@@ -144,7 +144,7 @@
       "type": "string",
       "title": "自定义组件",
       "description": "自定义组件",
-      "$componentType": "custom",
+      "$widget": "custom",
       "$placeholder": "自定义组件"
     },
     "oneOf": {
@@ -154,7 +154,7 @@
         {
           "title": "oneOf1",
           "type": "string",
-          "$componentType": "date"
+          "$widget": "date"
         },
         {
           "title": "oneOf2",

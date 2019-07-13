@@ -7,7 +7,7 @@ import { GetFieldDecoratorOptions } from 'antd/lib/form/Form';
 import FormContext from '../../../context';
 import styleName from '../../../utils/styleName';
 import createNumberRules from './createNumberRules';
-import { NumberItem, ContextValue } from '../../../types';
+import { NumberSchema, ContextValue } from '../../../types';
 import createElement from '../../../utils/createElement';
 
 /**
@@ -19,7 +19,7 @@ import createElement from '../../../utils/createElement';
  *   maximumMessage, options, defaultValue
  */
 interface NumberFieldProps {
-  schema: NumberItem;
+  schema: NumberSchema;
   required: boolean;
 }
 
@@ -37,7 +37,7 @@ function NumberField(props: PropsWithChildren<NumberFieldProps>): React.ReactEle
     $widget,
     $defaultValue,
     $hidden
-  }: NumberItem = schema;
+  }: NumberSchema = schema;
   const rules: Array<ValidationRule> = createNumberRules(languagePack, schema, required, type === 'integer');
   const option: GetFieldDecoratorOptions = { rules };
 
@@ -47,9 +47,9 @@ function NumberField(props: PropsWithChildren<NumberFieldProps>): React.ReactEle
   let widget: React.ReactNode = null;
 
   if (registry) {
-    widget = ($widget && $widget in registry)
-      ? registry[$widget](schema, option, form, required)
-      : createElement(registry.defaultNumber, [schema, option, form, required]);
+    widget = ($widget && $widget in registry.widgets)
+      ? registry.widgets[$widget](schema, option, form, required)
+      : createElement(registry.widgets.defaultNumber, [schema, option, form, required]);
   }
 
   return (

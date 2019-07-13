@@ -4,40 +4,48 @@ import * as PropTypes from 'prop-types';
 import isNumber from 'lodash-es/isNumber';
 import { Radio } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
-import FormContext from '../../../context';
-import { SchemaItem, ContextValue } from '../../../types';
+import FormContext from '../../context';
+import { Schema, ContextValue } from '../../types';
+import SchemaField from './SchemaField';
 
 interface OneOfProps {
-  schema: SchemaItem;
-  element: React.ReactNodeArray;
+  schema: Schema;
+  widget: React.ReactNodeArray;
 }
 
-function OneOf(props: PropsWithChildren<OneOfProps>): React.ReactElement | null {
+function OneOfField(props: PropsWithChildren<OneOfProps>): React.ReactElement | null {
   const context: ContextValue | {} = useContext(FormContext);
 
   if (!('form' in context)) return null; // 类型判断
 
   const { form }: ContextValue = context;
-  const { element, schema }: OneOfProps = props;
-  const { id, oneOf, $oneOfDisabled, $oneOfIndex }: SchemaItem = schema;
+
+  const { widget, schema }: OneOfProps = props;
+  const { id, oneOf, $oneOfDisabled, $oneOfIndex }: Schema = schema;
 
   // oneOf选项卡的index
   const [index, setIndex]: [number, Dispatch<SetStateAction<number>>]
     = useState(($oneOfIndex !== undefined && isNumber($oneOfIndex)) ? $oneOfIndex : 0);
 
-  // 切换的callback
-  function switchCallback(newIndex: number, oldIndex: number): void {
-    // 这个情况是type="string"时，下一个控件是date，因为moment的关系，所以要清空组件的值，最好尽量避免这种情况
-    // This case is type="string", the next control is date, because of the relationship of the moment,
-    // so to clear the value of the component, it is best to avoid this situation
+  /**
+   * 这个情况是type="string"时，下一个控件是date，因为moment的关系，所以要清空组件的值，最好尽量避免这种情况
+   * This case is type="string", the next control is date, because of the relationship of the moment,
+   * so to clear the value of the component, it is best to avoid this situation
+   */
+  function resetFieldsForDateWidget(newIndex, oldIndex) {
     if (
       oneOf
-      && oneOf[newIndex].type === 'string' && oneOf[oldIndex].type === 'string'                    // 新旧组件都为string
+      && oneOf[newIndex].type === 'string' && oneOf[oldIndex].type === 'string'    // 新旧组件都为string
       && ((oneOf[oldIndex].$widget !== 'date' && oneOf[newIndex].$widget === 'date') // 判断是否为date组件
       || (oneOf[oldIndex].$widget === 'date' && oneOf[newIndex].$widget !== 'date'))
     ) {
       form.resetFields([id]);
     }
+  }
+
+  // 切换的callback
+  function switchCallback(newIndex: number, oldIndex: number): void {
+    resetFieldsForDateWidget(newIndex, oldIndex);
 
     setIndex(newIndex);
   }
@@ -58,10 +66,10 @@ function OneOf(props: PropsWithChildren<OneOfProps>): React.ReactElement | null 
   // 渲染radio
   function radioGroupView(): React.ReactNode {
     const options: { label: string; value: number }[] = [];
-    const of: Array<SchemaItem> = oneOf || [];
+    const of: Array<Schema> = oneOf || [];
 
     for (let i: number = 0, j: number = of.length; i < j; i++) {
-      const item: SchemaItem = of[i];
+      const item: Schema = of[i];
 
       options.push({ label: item.title, value: i });
     }
@@ -76,17 +84,23 @@ function OneOf(props: PropsWithChildren<OneOfProps>): React.ReactElement | null 
     );
   }
 
+  const optionSchema = oneOf[index];
+
   return (
     <Fragment>
       { radioGroupView() }
-      { element[index] }
+      {optionSchema && (
+        <SchemaField schema={ optionSchema }
+          { ...props }
+        />
+      )}
     </Fragment>
   );
 }
 
-OneOf.propTypes = {
+OneOfField.propTypes = {
   schema: PropTypes.object,
-  element: PropTypes.arrayOf(PropTypes.node)
+  widget: PropTypes.arrayOf(PropTypes.node)
 };
 
-export default OneOf;
+export default OneOfField;

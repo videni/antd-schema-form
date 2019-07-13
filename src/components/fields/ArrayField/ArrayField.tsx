@@ -8,7 +8,7 @@ import FormContext from '../../../context';
 import styleName from '../../../utils/styleName';
 import createArrayRules from './createArrayRules';
 import createElement from '../../../utils/createElement';
-import { ArrayItem, ContextValue } from '../../../types';
+import { ArratSchema, ContextValue } from '../../../types';
 
 /**
  * 当类型为array时的组件渲染
@@ -18,7 +18,7 @@ import { ArrayItem, ContextValue } from '../../../types';
  * 扩展属性包括：componentType, options, addDataInReverseOrder
  */
 interface ArrayFieldProps {
-  schema: ArrayItem;
+  schema: ArratSchema;
   required: boolean;
 }
 
@@ -29,7 +29,7 @@ function ArrayField(props: PropsWithChildren<ArrayFieldProps>): React.ReactEleme
 
   const { form, registry, languagePack }: ContextValue = context;
   const { schema, required }: ArrayFieldProps = props;
-  const { title, description, $widget, $defaultValue, $hidden }: ArrayItem = schema;
+  const { title, description, $widget, $defaultValue, $hidden }: ArratSchema = schema;
   const rules: Array<ValidationRule> = createArrayRules(languagePack, schema, required);
   const option: GetFieldDecoratorOptions = { rules };
   let isTableComponent: boolean = false; // 判断是否为table组件
@@ -43,10 +43,10 @@ function ArrayField(props: PropsWithChildren<ArrayFieldProps>): React.ReactEleme
     // TODO: 此处渲染的是CheckBox.Group，但是组件名称是"checkbox"
     const cType: string | undefined = $widget === 'checkbox' ? 'checkboxGroup' : $widget;
 
-    if (cType && cType in registry) {
-      widget = registry[cType](schema, option, form, required);
+    if (cType && cType in registry.widgets) {
+      widget = registry.widgets[cType](schema, option, form, required);
     } else {
-      widget = createElement(registry.defaultArray, [schema, option, form, required]);
+      widget = createElement(registry.widgets.defaultArray, [schema, option, form, required]);
       isTableComponent = true;
     }
   }

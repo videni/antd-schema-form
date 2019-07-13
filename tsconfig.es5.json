@@ -17,6 +17,7 @@
       "ES2017",
       "ES2018",
       "DOM"
-    ]
+    ],
+    "allowSyntheticDefaultImports": true,
   }
 }

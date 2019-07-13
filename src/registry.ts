@@ -11,24 +11,25 @@ import {
   defaultArray,
   checkboxGroup,
   multipleOrTags,
-  defaultOneOf
 } from './components/widget/widget';
 
 const registry: object = {
-  defaultString,
-  textArea,
-  select,
-  radio,
-  date,
-  password,
-  defaultNumber,
-  defaultBoolean,
-  switch: switchComponent,
-  defaultArray,
-  checkboxGroup,
-  multiple: multipleOrTags,
-  tags: multipleOrTags,
-  defaultOneOf
+  widgets: {
+    defaultString,
+    textArea,
+    select,
+    radio,
+    date,
+    password,
+    defaultNumber,
+    defaultBoolean,
+    switch: switchComponent,
+    defaultArray,
+    checkboxGroup,
+    multiple: multipleOrTags,
+    tags: multipleOrTags,
+  },
+  fields: require('./components/fields').default,
 };
 
 export default registry;

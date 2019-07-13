@@ -2,13 +2,13 @@ import isNil from 'lodash-es/isNil';
 import isNumber from 'lodash-es/isNumber';
 import { ValidationRule } from 'antd/lib/form';
 import template from '../../../utils/template';
-import { NumberItem } from '../../../types';
+import { NumberSchema } from '../../../types';
 
-function createNumberRules(languagePack: any, schema: NumberItem, required: boolean, isInteger: boolean): Array<ValidationRule> {
+function createNumberRules(languagePack: any, schema: NumberSchema, required: boolean, isInteger: boolean): Array<ValidationRule> {
   const {
     $required, $requiredMessage, minimum, maximum, $minimumMessage, $maximumMessage, $integer, $integerMessage,
     $enumMessage
-  }: NumberItem = schema;
+  }: NumberSchema = schema;
   const enums: string[] | undefined = schema.enum;
   const rules: ValidationRule[] = [];
 

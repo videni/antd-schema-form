@@ -95,7 +95,7 @@
         "title": "Select多选模式",
         "description": "Select多选模式"
       },
-      "$componentType": "multiple",
+      "$widget": "multiple",
       "$options": [
         {
           "label": "选项1",
@@ -120,7 +120,7 @@
       },
       "minItems": 1,
       "maxItems": 5,
-      "$componentType": "tags",
+      "$widget": "tags",
       "$options": [
         {
           "label": "选项1",
@@ -143,7 +143,7 @@
         "title": "多选框",
         "description": "多选框"
       },
-      "$componentType": "checkbox",
+      "$widget": "checkbox",
       "$options": [
         {
           "label": "选项1",

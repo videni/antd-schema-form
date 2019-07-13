@@ -10,7 +10,7 @@ import FormContext from '../../../context';
 import styleName from '../../../utils/styleName';
 import createStringRules from './createStringRules';
 import createElement from '../../../utils/createElement';
-import { StringItem, ContextValue } from '../../../types';
+import { StringSchema, ContextValue } from '../../../types';
 
 /**
  * 当类型为string时的组件渲染
@@ -21,7 +21,7 @@ import { StringItem, ContextValue } from '../../../types';
  *   patternMessage, minLengthMessage, maxLengthMessage, options, defaultValue, placeholder
  */
 interface StringFieldProps {
-  schema: StringItem;
+  schema: StringSchema;
   required: boolean;
 }
 
@@ -38,7 +38,7 @@ function StringField(props: PropsWithChildren<StringFieldProps>): React.ReactEle
     $widget,
     $defaultValue,
     $hidden
-  }: StringItem = schema;
+  }: StringSchema = schema;
   const rules: Array<ValidationRule> = createStringRules(languagePack, schema, required);
   const option: GetFieldDecoratorOptions = { rules };
 
@@ -53,9 +53,9 @@ function StringField(props: PropsWithChildren<StringFieldProps>): React.ReactEle
   let widget: React.ReactNode = null;
 
   if (registry) {
-    widget = ($widget && $widget in registry)
-      ? registry[$widget](schema, option, form, required)
-      : createElement(registry.defaultString, [schema, option, form, required]);
+    widget = ($widget && $widget in registry.widgets)
+      ? registry.widgets[$widget](schema, option, form, required)
+      : createElement(registry.widgets.defaultString, [schema, option, form, required]);
   }
 
   return (

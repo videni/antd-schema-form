@@ -3,13 +3,13 @@ import isNumber from 'lodash-es/isNumber';
 import isString from 'lodash-es/isString';
 import { ValidationRule } from 'antd/lib/form';
 import template from '../../../utils/template';
-import { StringItem } from '../../../types';
+import { StringSchema } from '../../../types';
 
-function createStringRules(languagePack: any, schema: StringItem, required: boolean): Array<ValidationRule> {
+function createStringRules(languagePack: any, schema: StringSchema, required: boolean): Array<ValidationRule> {
   const {
     $required, $requiredMessage, pattern, $patternOption, $patternMessage, minLength, maxLength, $minLengthMessage,
     $maxLengthMessage, $length, $lengthMessage, $enumMessage
-  }: StringItem = schema;
+  }: StringSchema = schema;
   const enums: string[] | undefined = schema.enum;
   const rules: ValidationRule[] = [];
 

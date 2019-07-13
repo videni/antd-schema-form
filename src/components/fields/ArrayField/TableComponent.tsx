@@ -16,7 +16,7 @@ import { formatTableValue, sortIndex } from './tableFunction';
 import ObjectField from '../ObjectField/ObjectField';
 import styleName from '../../../utils/styleName';
 import template from '../../../utils/template';
-import { SchemaItem, StringItem, NumberItem, BooleanItem, ArrayItem, ContextValue } from '../../../types';
+import { Schema, StringSchema, NumberSchema, BooleanSchema, ArratSchema, ContextValue } from '../../../types';
 
 // 拖拽相关变量
 const tableDragClassName: [string, string] = [
@@ -32,7 +32,7 @@ function tableClassName(hasErr: boolean): string {
 }
 
 interface TableComponentProps {
-  schema: ArrayItem;
+  schema: ArratSchema;
 }
 
 function TableComponent(props: PropsWithChildren<TableComponentProps>): React.ReactElement | null {
@@ -42,8 +42,8 @@ function TableComponent(props: PropsWithChildren<TableComponentProps>): React.Re
 
   const { form, languagePack, customTableRender }: ContextValue = context;
   const { schema }: TableComponentProps = props;
-  const { id, items, minItems, maxItems, $minItemsMessage, $maxItemsMessage }: ArrayItem = schema;
-  const { type, properties, title, $tableRender }: StringItem | NumberItem | BooleanItem | ArrayItem = items;
+  const { id, items, minItems, maxItems, $minItemsMessage, $maxItemsMessage }: ArratSchema = schema;
+  const { type, properties, title, $tableRender }: StringSchema | NumberSchema | BooleanSchema | ArratSchema = items;
   // @ts-ignore
   const changeIndexRef: RefObject<Input> = useRef();
   let dragTargetId: string | undefined = undefined;    // 被拖拽的id
@@ -359,7 +359,7 @@ function TableComponent(props: PropsWithChildren<TableComponentProps>): React.Re
     };
 
     // 渲染自定义render
-    const createRenderCallback: Function = (renderItem: SchemaItem, customFunc: Function): Function => {
+    const createRenderCallback: Function = (renderItem: Schema, customFunc: Function): Function => {
       return (value: any, record: object, index: number): any => {
         return customFunc(value, record, index, renderItem, form);
       };
@@ -367,7 +367,7 @@ function TableComponent(props: PropsWithChildren<TableComponentProps>): React.Re
 
     if (type === 'object') {
       for (const key in properties) {
-        const propItem: SchemaItem = properties[key];
+        const propItem: Schema = properties[key];
 
         // 隐藏列
         if (!propItem.$tableColumnHidden) {

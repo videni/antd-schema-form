@@ -14,22 +14,31 @@ import StringField from '../StringField/StringField';
 import NumberField from '../NumberField/NumberField';
 import BooleanField from '../BooleanField/BooleanField';
 import ArrayField from '../ArrayField/ArrayField';
-import getValueFromObject from '../../../utils/getValueFromObject';
-import getKeysFromObject from '../../../utils/getKeysFromObject';
 import createElement from '../../../utils/createElement';
-import { SchemaItem, ContextValue } from '../../../types';
+import { Schema, ContextValue } from '../../../types';
+import  SchemaField  from '../SchemaField';
 
 /**
  * 当类型为object时的组件渲染
  * json schema的属性包括：id, type, title, description, properties, required
  */
 interface ObjectFieldProps {
-  schema: SchemaItem;
-  onOk?: Function;
-  onCancel?: Function;
-  okText?: string | number;
-  cancelText?: string | number;
-  footer?: Function;
+  schema: Schema;
+}
+
+function DefaultObjectFieldTemplate(props: {
+  id: string;
+  header: React.ReactNodeArray;
+  widgets: React.ReactNodeArray;
+}): React.ReactElement {
+  const { id, header, widgets } = props;
+
+  return (
+    <Collapse key={ id } className={ styleName('object-collapse') } defaultActiveKey={ [id] }>
+      <Collapse.Panel key={ id } header={ header }>
+        { widgets }
+      </Collapse.Panel>
+    </Collapse>);
 }
 
 function ObjectField(props: PropsWithChildren<ObjectFieldProps>): React.ReactElement | null {
@@ -39,86 +48,8 @@ function ObjectField(props: PropsWithChildren<ObjectFieldProps>): React.ReactEle
 
   const { form, registry, languagePack }: ContextValue = context;
   const {
-    schema: formObjectRoot,
-    onOk,
-    onCancel,
-    okText = languagePack.formObject.okText,
-    cancelText = languagePack.formObject.cancelText,
-    footer
+    schema,
   }: ObjectFieldProps = props;
-
-  // 根据type渲染不同的组件
-  function renderComponentByTypeView(schema: SchemaItem, required?: boolean, dependenciesDisplay?: boolean): React.ReactNode {
-    const { id, type }: SchemaItem = schema;
-    const _required: boolean = !!required;
-    const props: {
-      key: string;
-      schema: any;
-      required: boolean;
-    } = { key: id, schema, required: _required };
-
-    // 渲染oneOf
-    if ('oneOf' in schema && schema.oneOf && isArray(schema.oneOf) && schema.oneOf.length > 0) {
-      // eslint-disable-next-line no-use-before-define
-      return renderOneOfComponentView(schema, _required);
-    }
-
-    // 判断是否渲染dependencies
-    if (isBoolean(dependenciesDisplay) && !dependenciesDisplay) {
-      return null;
-    }
-
-    switch (type) {
-      case 'string':
-        return <StringField { ...props } />;
-
-      case 'integer':
-      case 'number':
-        return <NumberField { ...props } />;
-
-      case 'boolean':
-        return <BooleanField { ...props } />;
-
-      case 'array':
-        return <ArrayField { ...props } />;
-
-      case 'object':
-        // eslint-disable-next-line no-use-before-define
-        return renderObjectComponentView(schema);
-
-      default:
-        return null;
-    }
-  }
-
-  // oneOf组件
-  function renderOneOfComponentView(schema: SchemaItem, required: boolean): React.ReactNode {
-    const { oneOf, $oneOfComponentType }: SchemaItem = schema;
-    const widget: React.ReactNodeArray = [];
-
-    (oneOf || []).forEach((value: SchemaItem, index: number, array: Array<SchemaItem>): void => {
-      const childrenRoot: SchemaItem = { ...value };
-
-      for (const key in schema) {
-        // children不继承oneOf相关的属性
-        if (!(key in childrenRoot) && !['oneOf', '$oneOfDisabled', '$oneOfIndex', '$oneOfComponentType'].includes(key)) {
-          childrenRoot[key] = schema[key];
-        }
-      }
-
-      widget.push(renderComponentByTypeView(childrenRoot, required));
-    });
-
-    let oneOfElement: React.ReactNode = null;
-
-    if (registry) {
-      oneOfElement = $oneOfComponentType && $oneOfComponentType in registry
-        ? registry[$oneOfComponentType](schema, form, widget)
-        : createElement(registry.defaultOneOf, [schema, form, widget]);
-    }
-
-    return oneOfElement;
-  }
 
   // 判断是否显示
   function dependenciesDisplay(id: string, key: string, keyDepMap: { [key: string]: string[] }): boolean {
@@ -137,11 +68,11 @@ function ObjectField(props: PropsWithChildren<ObjectFieldProps>): React.ReactEle
   }
 
   // 渲染一个object组件
-  function renderObjectComponentView(schema: SchemaItem): React.ReactNode {
-    const { id, title, description, $widget }: SchemaItem = schema;
+  function objectFieldRender(schema: Schema): React.ReactNode {
+    const { id, title, description, $widget}: Schema = schema;
     const required: Array<string> = schema.required || [];
     const properties: object = schema.properties || {};
-    const widget: React.ReactNodeArray = [];
+    const widgets: React.ReactNodeArray = [];
     let keyDepMap: { [key: string]: string[] } | undefined = undefined;
 
     // 获取dependencies的值
@@ -163,11 +94,13 @@ function ObjectField(props: PropsWithChildren<ObjectFieldProps>): React.ReactEle
         isDependenciesDisplay = undefined;
       }
 
-      widget.push(renderComponentByTypeView(
-        properties[key],
-        isDependenciesDisplay || required.includes(key), // 当被依赖时，表单必须填写
-        isDependenciesDisplay
-      ));
+      widgets.push(
+        <SchemaField schema={ properties[key] }
+          key={key}
+          required={ isDependenciesDisplay || required.includes(key) } // 当被依赖时，表单必须填写
+          isDependenciesDisplay={ isDependenciesDisplay }
+        />
+      );
     }
 
     // header
@@ -176,80 +109,27 @@ function ObjectField(props: PropsWithChildren<ObjectFieldProps>): React.ReactEle
       <span className={ styleName('object-description') } key="description">{ description }</span>
     ];
 
-    return (registry && $widget && $widget in registry)
-      ? registry[$widget](schema, form, widget)
+    return (registry && $widget && $widget in registry.widgets)
+      ? registry.widgets[$widget](schema, form, $widget)
       : (
-        <Collapse key={ id } className={ styleName('object-collapse') } defaultActiveKey={ [id] }>
-          <Collapse.Panel key={ id } header={ header }>
-            { widget }
-          </Collapse.Panel>
-        </Collapse>
+        <DefaultObjectFieldTemplate id={ id }
+          widgets={ widgets }
+          header={ header }
+        />
       );
   }
 
-  // ok事件
-  function handleOkClick(event: React.MouseEvent<HTMLElement, MouseEvent>): void {
-    const keys: string[] = getKeysFromObject(formObjectRoot);
-
-    form.validateFieldsAndScroll(keys, (err: any, value: object): void => {
-      if (err) return void 0;
-
-      const value2: object = getValueFromObject(value);
-
-      onOk && onOk(form, value2, keys);
-    });
-  }
-
-  // cancel事件
-  function handleCancelClick(event: React.MouseEvent<HTMLElement, MouseEvent>): void {
-    onCancel && onCancel(form);
-  }
-
-  // 确认和取消按钮
-  function footerView(): React.ReactNode {
-    if (onOk || onCancel) {
-      return (
-        <div className={ styleName('object-click-button-box') }>
-          {
-            onOk
-              ? <Button type="primary" onClick={ handleOkClick }>{ okText }</Button>
-              : null
-          }
-          {
-            onCancel ? (
-              <Button className={ onOk ? styleName('object-cancel') : undefined } onClick={ handleCancelClick }>
-                { cancelText }
-              </Button>
-            ) : null
-          }
-        </div>
-      );
-    } else {
-      return null;
-    }
-  }
+  const content = objectFieldRender(schema);
 
   return (
     <Fragment>
-      { renderComponentByTypeView(formObjectRoot) }
-      { footer ? footer(form) : footerView() }
+      { content }
     </Fragment>
   );
 }
 
 ObjectField.propTypes = {
   schema: PropTypes.object,
-  onOk: PropTypes.func,
-  onCancel: PropTypes.func,
-  okText: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number
-  ]),
-  cancelText: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number
-  ]),
-  footer: PropTypes.func
 };
 
 export default ObjectField;

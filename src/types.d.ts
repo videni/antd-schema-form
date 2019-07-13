@@ -3,14 +3,14 @@ import { WrappedFormUtils } from 'antd/lib/form/Form';
 export interface ContextValue {
   form: WrappedFormUtils;
   registry?: {
-    [key: string]: Function;
+    [key: string]: Function | object;
   };
   customTableRender?: object;
   language?: string;
   languagePack?: any;
 }
 
-export interface SchemaItem {
+export interface Schema {
   id: string;
   type: string;
   title: string;
@@ -30,7 +30,7 @@ export interface SchemaItem {
   $oneOfComponentType?: string;
 }
 
-export interface StringItem extends SchemaItem {
+export interface StringSchema extends Schema {
   $readOnly?: boolean;
   $placeholder?: string;
   $required?: boolean;
@@ -50,7 +50,7 @@ export interface StringItem extends SchemaItem {
   $options?: Array<{ label: string; value: string }>;
 }
 
-export interface NumberItem extends SchemaItem {
+export interface NumberSchema extends Schema {
   $readOnly?: boolean;
   $placeholder?: string;
   $required?: boolean;
@@ -67,12 +67,12 @@ export interface NumberItem extends SchemaItem {
   $options?: Array<{ label: string; value: number }>;
 }
 
-export interface BooleanItem extends SchemaItem {
+export interface BooleanSchema extends Schema {
   $defaultValue?: boolean;
 }
 
-export interface ArrayItem extends SchemaItem {
-  items: StringItem | NumberItem | BooleanItem | ArrayItem;
+export interface ArratSchema extends Schema {
+  items: StringSchema | NumberSchema | BooleanSchema | ArratSchema;
   $defaultValue?: Array<any>;
   $options?: Array<{ label: string; value: any }>;
   minItems?: number;

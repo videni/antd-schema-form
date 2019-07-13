@@ -70,7 +70,7 @@
       "type": "number",
       "title": "单选框组件",
       "description": "单选框组件",
-      "$componentType": "radio",
+      "$widget": "radio",
       "$options": [
         {
           "label": "选项1",

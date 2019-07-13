@@ -19,7 +19,7 @@ const schema = {
   }
 };
 
-const value = {
+const formData = {
   $root: {
     string: {
       default: 'abcdefg'
@@ -31,13 +31,15 @@ const value = {
 };
 
 // 自定义组件
-const customComponent = {
-  custom(item, option, form, required) {
-    const { getFieldDecorator } = form;
+const registry = {
+  widgets: {
+    custom: (item, option, form, required) => {
+      const { getFieldDecorator } = form;
 
-    return getFieldDecorator(item.id, option)(
-      <Input placeholder="自定义组件" required={ required } addonAfter={ <Icon type="setting" /> } />
-    );
+      return getFieldDecorator(item.id, option)(
+        <Input placeholder="自定义组件" required={ required } addonAfter={ <Icon type="setting" /> } />
+      );
+    }
   }
 };
 
@@ -54,10 +56,10 @@ const customTableRender = {
 function Form(props) {
   return (
     <SchemaForm schema={ schema }
-      value={ value }
-      customComponent={ customComponent }
+      formData={ formData }
+      customRegistry={ registry }
       customTableRender={ customTableRender }
-      onOk={ (form, value, keys) => console.log(value, keys) }
+      onOk={ (form, formData, keys) => console.log(formData, keys) }
       okText="提交"
     />
   );

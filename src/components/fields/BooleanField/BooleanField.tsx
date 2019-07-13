@@ -4,7 +4,7 @@ import * as PropTypes from 'prop-types';
 import { Form, Tooltip } from 'antd';
 import { GetFieldDecoratorOptions } from 'antd/lib/form/Form';
 import FormContext from '../../../context';
-import { ContextValue, BooleanItem } from '../../../types';
+import { ContextValue, BooleanSchema } from '../../../types';
 import styleName from '../../../utils/styleName';
 import createElement from '../../../utils/createElement';
 
@@ -16,7 +16,7 @@ import createElement from '../../../utils/createElement';
  * 扩展属性包括：componentType
  */
 interface BooleanFieldProps {
-  schema: BooleanItem;
+  schema: BooleanSchema;
   required: boolean;
 }
 
@@ -27,7 +27,7 @@ function BooleanField(props: PropsWithChildren<BooleanFieldProps>): React.ReactE
 
   const { form, registry }: ContextValue = context;
   const { schema, required }: BooleanFieldProps = props;
-  const { title, description, $widget, $defaultValue, $hidden }: BooleanItem = schema;
+  const { title, description, $widget, $defaultValue, $hidden }: BooleanSchema = schema;
   const option: GetFieldDecoratorOptions = {
     valuePropName: 'checked'
   };
@@ -38,9 +38,9 @@ function BooleanField(props: PropsWithChildren<BooleanFieldProps>): React.ReactE
   let widget: React.ReactNode = null;
 
   if (registry) {
-    widget = ($widget && $widget in registry)
-      ? registry[$widget](schema, option, form, required)
-      : createElement(registry.defaultBoolean, [schema, option, form, required]);
+    widget = ($widget && $widget in registry.widgets)
+      ? registry.widgets[$widget](schema, option, form, required)
+      : createElement(registry.widgets.defaultBoolean, [schema, option, form, required]);
   }
 
   return (

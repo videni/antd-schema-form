@@ -2,10 +2,10 @@ import isNil from 'lodash-es/isNil';
 import isNumber from 'lodash-es/isNumber';
 import { ValidationRule } from 'antd/lib/form';
 import template from '../../../utils/template';
-import { ArrayItem } from '../../../types';
+import { ArratSchema } from '../../../types';
 
-function createArrayRules(languagePack: any, schema: ArrayItem, required: boolean): Array<ValidationRule> {
-  const { minItems, maxItems, $minItemsMessage, $maxItemsMessage }: ArrayItem = schema;
+function createArrayRules(languagePack: any, schema: ArratSchema, required: boolean): Array<ValidationRule> {
+  const { minItems, maxItems, $minItemsMessage, $maxItemsMessage }: ArratSchema = schema;
   const rules: ValidationRule[] = [];
 
   // 数组内元素的数量最少值
