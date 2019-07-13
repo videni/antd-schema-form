@@ -23,7 +23,7 @@ import { SchemaItem, ContextValue } from '../../../types';
  * 当类型为object时的组件渲染
  * json schema的属性包括：id, type, title, description, properties, required
  */
-interface FormObjectProps {
+interface ObjectFieldProps {
   root: SchemaItem;
   onOk?: Function;
   onCancel?: Function;
@@ -32,7 +32,7 @@ interface FormObjectProps {
   footer?: Function;
 }
 
-function ObjectField(props: PropsWithChildren<FormObjectProps>): React.ReactElement | null {
+function ObjectField(props: PropsWithChildren<ObjectFieldProps>): React.ReactElement | null {
   const context: ContextValue | {} = useContext(FormContext);
 
   if (!('form' in context)) return null; // 类型判断
@@ -45,7 +45,7 @@ function ObjectField(props: PropsWithChildren<FormObjectProps>): React.ReactElem
     okText = languagePack.formObject.okText,
     cancelText = languagePack.formObject.cancelText,
     footer
-  }: FormObjectProps = props;
+  }: ObjectFieldProps = props;
 
   // 根据type渲染不同的组件
   function renderComponentByTypeView(root: SchemaItem, required?: boolean, dependenciesDisplay?: boolean): React.ReactNode {

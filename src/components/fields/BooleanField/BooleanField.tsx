@@ -15,18 +15,18 @@ import createElement from '../../../utils/createElement';
  * 扩展属性前必须加上"$"
  * 扩展属性包括：componentType
  */
-interface FormBooleanProps {
+interface BooleanFieldProps {
   root: BooleanItem;
   required: boolean;
 }
 
-function BooleanField(props: PropsWithChildren<FormBooleanProps>): React.ReactElement | null {
+function BooleanField(props: PropsWithChildren<BooleanFieldProps>): React.ReactElement | null {
   const context: ContextValue | {} = useContext(FormContext);
 
   if (!('form' in context)) return null; // 类型判断
 
   const { form, registry }: ContextValue = context;
-  const { root, required }: FormBooleanProps = props;
+  const { root, required }: BooleanFieldProps = props;
   const { title, description, $componentType, $defaultValue, $hidden }: BooleanItem = root;
   const option: GetFieldDecoratorOptions = {
     valuePropName: 'checked'

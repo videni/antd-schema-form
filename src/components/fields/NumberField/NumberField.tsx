@@ -18,18 +18,18 @@ import createElement from '../../../utils/createElement';
  * 扩展属性包括：required, componentType, readOnly, enumMessage, requiredMessage, minimumMessage、
  *   maximumMessage, options, defaultValue
  */
-interface FormNumberProps {
+interface NumberFieldProps {
   root: NumberItem;
   required: boolean;
 }
 
-function NumberField(props: PropsWithChildren<FormNumberProps>): React.ReactElement | null {
+function NumberField(props: PropsWithChildren<NumberFieldProps>): React.ReactElement | null {
   const context: ContextValue | {} = useContext(FormContext);
 
   if (!('form' in context)) return null; // 类型判断
 
   const { form, registry, languagePack }: ContextValue = context;
-  const { root, required }: FormNumberProps = props; // type=object时，会判断key是否存在于required数组中
+  const { root, required }: NumberFieldProps = props; // type=object时，会判断key是否存在于required数组中
   const {
     type,
     title,

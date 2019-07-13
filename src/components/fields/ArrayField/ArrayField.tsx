@@ -17,18 +17,18 @@ import { ArrayItem, ContextValue } from '../../../types';
  * 扩展属性前必须加上"$"
  * 扩展属性包括：componentType, options, addDataInReverseOrder
  */
-interface FormArrayProps {
+interface ArrayFieldProps {
   root: ArrayItem;
   required: boolean;
 }
 
-function ArrayField(props: PropsWithChildren<FormArrayProps>): React.ReactElement | null {
+function ArrayField(props: PropsWithChildren<ArrayFieldProps>): React.ReactElement | null {
   const context: ContextValue | {} = useContext(FormContext);
 
   if (!('form' in context)) return null; // 类型判断
 
   const { form, registry, languagePack }: ContextValue = context;
-  const { root, required }: FormArrayProps = props;
+  const { root, required }: ArrayFieldProps = props;
   const { title, description, $componentType, $defaultValue, $hidden }: ArrayItem = root;
   const rules: Array<ValidationRule> = createArrayRules(languagePack, root, required);
   const option: GetFieldDecoratorOptions = { rules };
