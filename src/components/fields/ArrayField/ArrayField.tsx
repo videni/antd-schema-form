@@ -18,7 +18,7 @@ import { ArrayItem, ContextValue } from '../../../types';
  * 扩展属性包括：componentType, options, addDataInReverseOrder
  */
 interface ArrayFieldProps {
-  root: ArrayItem;
+  schema: ArrayItem;
   required: boolean;
 }
 
@@ -28,9 +28,9 @@ function ArrayField(props: PropsWithChildren<ArrayFieldProps>): React.ReactEleme
   if (!('form' in context)) return null; // 类型判断
 
   const { form, registry, languagePack }: ContextValue = context;
-  const { root, required }: ArrayFieldProps = props;
-  const { title, description, $componentType, $defaultValue, $hidden }: ArrayItem = root;
-  const rules: Array<ValidationRule> = createArrayRules(languagePack, root, required);
+  const { schema, required }: ArrayFieldProps = props;
+  const { title, description, $componentType, $defaultValue, $hidden }: ArrayItem = schema;
+  const rules: Array<ValidationRule> = createArrayRules(languagePack, schema, required);
   const option: GetFieldDecoratorOptions = { rules };
   let isTableComponent: boolean = false; // 判断是否为table组件
 
@@ -44,9 +44,9 @@ function ArrayField(props: PropsWithChildren<ArrayFieldProps>): React.ReactEleme
     const cType: string | undefined = $componentType === 'checkbox' ? 'checkboxGroup' : $componentType;
 
     if (cType && cType in registry) {
-      element = registry[cType](root, option, form, required);
+      element = registry[cType](schema, option, form, required);
     } else {
-      element = createElement(registry.defaultArray, [root, option, form, required]);
+      element = createElement(registry.defaultArray, [schema, option, form, required]);
       isTableComponent = true;
     }
   }
@@ -66,7 +66,7 @@ function ArrayField(props: PropsWithChildren<ArrayFieldProps>): React.ReactEleme
 }
 
 ArrayField.propTypes = {
-  root: PropTypes.object,
+  schema: PropTypes.object,
   required: PropTypes.bool
 };
 

@@ -19,7 +19,7 @@ import createElement from '../../../utils/createElement';
  *   maximumMessage, options, defaultValue
  */
 interface NumberFieldProps {
-  root: NumberItem;
+  schema: NumberItem;
   required: boolean;
 }
 
@@ -29,7 +29,7 @@ function NumberField(props: PropsWithChildren<NumberFieldProps>): React.ReactEle
   if (!('form' in context)) return null; // 类型判断
 
   const { form, registry, languagePack }: ContextValue = context;
-  const { root, required }: NumberFieldProps = props; // type=object时，会判断key是否存在于required数组中
+  const { schema, required }: NumberFieldProps = props; // type=object时，会判断key是否存在于required数组中
   const {
     type,
     title,
@@ -37,8 +37,8 @@ function NumberField(props: PropsWithChildren<NumberFieldProps>): React.ReactEle
     $componentType,
     $defaultValue,
     $hidden
-  }: NumberItem = root;
-  const rules: Array<ValidationRule> = createNumberRules(languagePack, root, required, type === 'integer');
+  }: NumberItem = schema;
+  const rules: Array<ValidationRule> = createNumberRules(languagePack, schema, required, type === 'integer');
   const option: GetFieldDecoratorOptions = { rules };
 
   // 表单默认值
@@ -48,8 +48,8 @@ function NumberField(props: PropsWithChildren<NumberFieldProps>): React.ReactEle
 
   if (registry) {
     element = ($componentType && $componentType in registry)
-      ? registry[$componentType](root, option, form, required)
-      : createElement(registry.defaultNumber, [root, option, form, required]);
+      ? registry[$componentType](schema, option, form, required)
+      : createElement(registry.defaultNumber, [schema, option, form, required]);
   }
 
   return (
@@ -62,7 +62,7 @@ function NumberField(props: PropsWithChildren<NumberFieldProps>): React.ReactEle
 }
 
 NumberField.propTypes = {
-  root: PropTypes.object,
+  schema: PropTypes.object,
   required: PropTypes.bool
 };
 

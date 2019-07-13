@@ -6,7 +6,7 @@ import numberJson from '../json/number.json';
 import booleanJson from '../json/boolean.json';
 import arrayJson from '../json/array.json';
 
-const json = {
+const schema = {
   id: '$root',
   type: 'object',
   title: 'schema form',
@@ -53,7 +53,7 @@ const customTableRender = {
 
 function Form(props) {
   return (
-    <SchemaForm json={ json }
+    <SchemaForm schema={ schema }
       value={ value }
       customComponent={ customComponent }
       customTableRender={ customTableRender }

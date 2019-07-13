@@ -5,12 +5,12 @@ import { ValidationRule } from 'antd/lib/form';
 import template from '../../../utils/template';
 import { StringItem } from '../../../types';
 
-function createStringRules(languagePack: any, root: StringItem, required: boolean): Array<ValidationRule> {
+function createStringRules(languagePack: any, schema: StringItem, required: boolean): Array<ValidationRule> {
   const {
     $required, $requiredMessage, pattern, $patternOption, $patternMessage, minLength, maxLength, $minLengthMessage,
     $maxLengthMessage, $length, $lengthMessage, $enumMessage
-  }: StringItem = root;
-  const enums: string[] | undefined = root.enum;
+  }: StringItem = schema;
+  const enums: string[] | undefined = schema.enum;
   const rules: ValidationRule[] = [];
 
   // 判断表单是否必填

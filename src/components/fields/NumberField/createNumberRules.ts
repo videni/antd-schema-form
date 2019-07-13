@@ -4,12 +4,12 @@ import { ValidationRule } from 'antd/lib/form';
 import template from '../../../utils/template';
 import { NumberItem } from '../../../types';
 
-function createNumberRules(languagePack: any, root: NumberItem, required: boolean, isInteger: boolean): Array<ValidationRule> {
+function createNumberRules(languagePack: any, schema: NumberItem, required: boolean, isInteger: boolean): Array<ValidationRule> {
   const {
     $required, $requiredMessage, minimum, maximum, $minimumMessage, $maximumMessage, $integer, $integerMessage,
     $enumMessage
-  }: NumberItem = root;
-  const enums: string[] | undefined = root.enum;
+  }: NumberItem = schema;
+  const enums: string[] | undefined = schema.enum;
   const rules: ValidationRule[] = [];
 
   // 判断表单是否必填

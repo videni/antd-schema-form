@@ -8,7 +8,7 @@ import FormContext from '../../../context';
 import { SchemaItem, ContextValue } from '../../../types';
 
 interface OneOfProps {
-  root: SchemaItem;
+  schema: SchemaItem;
   element: React.ReactNodeArray;
 }
 
@@ -18,8 +18,8 @@ function OneOf(props: PropsWithChildren<OneOfProps>): React.ReactElement | null 
   if (!('form' in context)) return null; // 类型判断
 
   const { form }: ContextValue = context;
-  const { element, root }: OneOfProps = props;
-  const { id, oneOf, $oneOfDisabled, $oneOfIndex }: SchemaItem = root;
+  const { element, schema }: OneOfProps = props;
+  const { id, oneOf, $oneOfDisabled, $oneOfIndex }: SchemaItem = schema;
 
   // oneOf选项卡的index
   const [index, setIndex]: [number, Dispatch<SetStateAction<number>>]
@@ -53,7 +53,7 @@ function OneOf(props: PropsWithChildren<OneOfProps>): React.ReactElement | null 
 
   useEffect(function(): void {
     setIndex(($oneOfIndex !== undefined && isNumber($oneOfIndex)) ? $oneOfIndex : 0);
-  }, [root]);
+  }, [schema]);
 
   // 渲染radio
   function radioGroupView(): React.ReactNode {
@@ -85,7 +85,7 @@ function OneOf(props: PropsWithChildren<OneOfProps>): React.ReactElement | null 
 }
 
 OneOf.propTypes = {
-  root: PropTypes.object,
+  schema: PropTypes.object,
   element: PropTypes.arrayOf(PropTypes.node)
 };
 

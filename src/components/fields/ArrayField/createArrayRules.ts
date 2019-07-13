@@ -4,8 +4,8 @@ import { ValidationRule } from 'antd/lib/form';
 import template from '../../../utils/template';
 import { ArrayItem } from '../../../types';
 
-function createArrayRules(languagePack: any, root: ArrayItem, required: boolean): Array<ValidationRule> {
-  const { minItems, maxItems, $minItemsMessage, $maxItemsMessage }: ArrayItem = root;
+function createArrayRules(languagePack: any, schema: ArrayItem, required: boolean): Array<ValidationRule> {
+  const { minItems, maxItems, $minItemsMessage, $maxItemsMessage }: ArrayItem = schema;
   const rules: ValidationRule[] = [];
 
   // 数组内元素的数量最少值

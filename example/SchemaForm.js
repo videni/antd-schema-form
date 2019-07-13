@@ -1,4 +1,4 @@
-import SchemaForm from '../src';
+import Form from '../src';
 import '../src/style/antd-schema-form-global.sass';
 
-export default SchemaForm;
+export default Form;

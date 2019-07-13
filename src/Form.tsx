@@ -11,7 +11,7 @@ import languagePack from './languagePack';
 import { SchemaItem, ContextValue } from './types';
 
 export interface FormProps extends FormComponentProps {
-  json: SchemaItem;
+  schema: SchemaItem;
   value?: any;
   onOk?: Function;
   onCancel?: Function;
@@ -29,7 +29,7 @@ function Form(props: PropsWithChildren<FormProps>): React.ReactElement | null {
   const {
     value: schemaFormValue,
     form,
-    json,
+    schema,
     onOk,
     onCancel,
     okText,
@@ -64,7 +64,7 @@ function Form(props: PropsWithChildren<FormProps>): React.ReactElement | null {
 
   return (
     <FormContext.Provider value={ contextValue }>
-      <ObjectField root={ json }
+      <ObjectField schema={ schema }
         onOk={ onOk }
         onCancel={ onCancel }
         okText={ okText }
@@ -76,7 +76,7 @@ function Form(props: PropsWithChildren<FormProps>): React.ReactElement | null {
 }
 
 Form.propTypes = {
-  json: PropTypes.object.isRequired,
+  schema: PropTypes.object.isRequired,
   value: PropTypes.object,
   onOk: PropTypes.func,
   onCancel: PropTypes.func,

@@ -24,7 +24,7 @@ import { SchemaItem, ContextValue } from '../../../types';
  * json schema的属性包括：id, type, title, description, properties, required
  */
 interface ObjectFieldProps {
-  root: SchemaItem;
+  schema: SchemaItem;
   onOk?: Function;
   onCancel?: Function;
   okText?: string | number;
@@ -39,7 +39,7 @@ function ObjectField(props: PropsWithChildren<ObjectFieldProps>): React.ReactEle
 
   const { form, registry, languagePack }: ContextValue = context;
   const {
-    root: formObjectRoot,
+    schema: formObjectRoot,
     onOk,
     onCancel,
     okText = languagePack.formObject.okText,
@@ -48,19 +48,19 @@ function ObjectField(props: PropsWithChildren<ObjectFieldProps>): React.ReactEle
   }: ObjectFieldProps = props;
 
   // 根据type渲染不同的组件
-  function renderComponentByTypeView(root: SchemaItem, required?: boolean, dependenciesDisplay?: boolean): React.ReactNode {
-    const { id, type }: SchemaItem = root;
+  function renderComponentByTypeView(schema: SchemaItem, required?: boolean, dependenciesDisplay?: boolean): React.ReactNode {
+    const { id, type }: SchemaItem = schema;
     const _required: boolean = !!required;
     const props: {
       key: string;
-      root: any;
+      schema: any;
       required: boolean;
-    } = { key: id, root, required: _required };
+    } = { key: id, schema, required: _required };
 
     // 渲染oneOf
-    if ('oneOf' in root && root.oneOf && isArray(root.oneOf) && root.oneOf.length > 0) {
+    if ('oneOf' in schema && schema.oneOf && isArray(schema.oneOf) && schema.oneOf.length > 0) {
       // eslint-disable-next-line no-use-before-define
-      return renderOneOfComponentView(root, _required);
+      return renderOneOfComponentView(schema, _required);
     }
 
     // 判断是否渲染dependencies
@@ -84,7 +84,7 @@ function ObjectField(props: PropsWithChildren<ObjectFieldProps>): React.ReactEle
 
       case 'object':
         // eslint-disable-next-line no-use-before-define
-        return renderObjectComponentView(root);
+        return renderObjectComponentView(schema);
 
       default:
         return null;
@@ -92,17 +92,17 @@ function ObjectField(props: PropsWithChildren<ObjectFieldProps>): React.ReactEle
   }
 
   // oneOf组件
-  function renderOneOfComponentView(root: SchemaItem, required: boolean): React.ReactNode {
-    const { oneOf, $oneOfComponentType }: SchemaItem = root;
+  function renderOneOfComponentView(schema: SchemaItem, required: boolean): React.ReactNode {
+    const { oneOf, $oneOfComponentType }: SchemaItem = schema;
     const element: React.ReactNodeArray = [];
 
     (oneOf || []).forEach((value: SchemaItem, index: number, array: Array<SchemaItem>): void => {
       const childrenRoot: SchemaItem = { ...value };
 
-      for (const key in root) {
+      for (const key in schema) {
         // children不继承oneOf相关的属性
         if (!(key in childrenRoot) && !['oneOf', '$oneOfDisabled', '$oneOfIndex', '$oneOfComponentType'].includes(key)) {
-          childrenRoot[key] = root[key];
+          childrenRoot[key] = schema[key];
         }
       }
 
@@ -113,8 +113,8 @@ function ObjectField(props: PropsWithChildren<ObjectFieldProps>): React.ReactEle
 
     if (registry) {
       oneOfElement = $oneOfComponentType && $oneOfComponentType in registry
-        ? registry[$oneOfComponentType](root, form, element)
-        : createElement(registry.defaultOneOf, [root, form, element]);
+        ? registry[$oneOfComponentType](schema, form, element)
+        : createElement(registry.defaultOneOf, [schema, form, element]);
     }
 
     return oneOfElement;
@@ -137,16 +137,16 @@ function ObjectField(props: PropsWithChildren<ObjectFieldProps>): React.ReactEle
   }
 
   // 渲染一个object组件
-  function renderObjectComponentView(root: SchemaItem): React.ReactNode {
-    const { id, title, description, $componentType }: SchemaItem = root;
-    const required: Array<string> = root.required || [];
-    const properties: object = root.properties || {};
+  function renderObjectComponentView(schema: SchemaItem): React.ReactNode {
+    const { id, title, description, $componentType }: SchemaItem = schema;
+    const required: Array<string> = schema.required || [];
+    const properties: object = schema.properties || {};
     const element: React.ReactNodeArray = [];
     let keyDepMap: { [key: string]: string[] } | undefined = undefined;
 
     // 获取dependencies的值
-    if (('dependencies' in root) && root.dependencies && isPlainObject(root.dependencies)) {
-      keyDepMap = transform(root.dependencies, function(result: string[], value: string[], key: string): void {
+    if (('dependencies' in schema) && schema.dependencies && isPlainObject(schema.dependencies)) {
+      keyDepMap = transform(schema.dependencies, function(result: string[], value: string[], key: string): void {
         for (const item of value) {
           (result[item] || (result[item] = [])).push(key);
         }
@@ -177,7 +177,7 @@ function ObjectField(props: PropsWithChildren<ObjectFieldProps>): React.ReactEle
     ];
 
     return (registry && $componentType && $componentType in registry)
-      ? registry[$componentType](root, form, element)
+      ? registry[$componentType](schema, form, element)
       : (
         <Collapse key={ id } className={ styleName('object-collapse') } defaultActiveKey={ [id] }>
           <Collapse.Panel key={ id } header={ header }>
@@ -238,7 +238,7 @@ function ObjectField(props: PropsWithChildren<ObjectFieldProps>): React.ReactEle
 }
 
 ObjectField.propTypes = {
-  root: PropTypes.object,
+  schema: PropTypes.object,
   onOk: PropTypes.func,
   onCancel: PropTypes.func,
   okText: PropTypes.oneOfType([

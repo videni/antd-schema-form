@@ -11,26 +11,26 @@ import { SchemaItem, StringItem, NumberItem, BooleanItem, ArrayItem } from '../.
 /* string类型组件 */
 // 默认组件
 export function defaultString(
-  root: StringItem,
+  schema: StringItem,
   option: GetFieldDecoratorOptions,
   form: WrappedFormUtils,
   required: boolean
 ): React.ReactNode {
   const { getFieldDecorator }: WrappedFormUtils = form;
-  const { id, $readOnly, $placeholder }: StringItem = root;
+  const { id, $readOnly, $placeholder }: StringItem = schema;
 
   return getFieldDecorator(id, option)(<Input readOnly={ $readOnly } placeholder={ $placeholder } />);
 }
 
 // 文本域
 export function textArea(
-  root: StringItem,
+  schema: StringItem,
   option: GetFieldDecoratorOptions,
   form: WrappedFormUtils,
   required: boolean
 ): React.ReactNode {
   const { getFieldDecorator }: WrappedFormUtils = form;
-  const { id, $readOnly, $placeholder }: StringItem = root;
+  const { id, $readOnly, $placeholder }: StringItem = schema;
 
   return getFieldDecorator(id, option)(
     <Input.TextArea rows={ 6 } readOnly={ $readOnly } placeholder={ $placeholder } />
@@ -39,13 +39,13 @@ export function textArea(
 
 // select
 export function select(
-  root: StringItem,
+  schema: StringItem,
   option: GetFieldDecoratorOptions,
   form: WrappedFormUtils,
   required: boolean
 ): React.ReactNode {
   const { getFieldDecorator }: WrappedFormUtils = form;
-  const { id, $required, $options = [], $placeholder }: StringItem = root;
+  const { id, $required, $options = [], $placeholder }: StringItem = schema;
 
   return getFieldDecorator(id, option)(
     <Select className={ styleName('string-select') }
@@ -59,26 +59,26 @@ export function select(
 
 // radio（string类型和number类型都能用）
 export function radio(
-  root: StringItem,
+  schema: StringItem,
   option: GetFieldDecoratorOptions,
   form: WrappedFormUtils,
   required: boolean
 ): React.ReactNode {
   const { getFieldDecorator }: WrappedFormUtils = form;
-  const { id, $options = [] }: StringItem | NumberItem = root;
+  const { id, $options = [] }: StringItem | NumberItem = schema;
 
   return getFieldDecorator(id, option)(<Radio.Group options={ $options } />);
 }
 
 // date
 export function date(
-  root: StringItem,
+  schema: StringItem,
   option: GetFieldDecoratorOptions,
   form: WrappedFormUtils,
   required: boolean
 ): React.ReactNode {
   const { getFieldDecorator }: WrappedFormUtils = form;
-  const { id, $placeholder }: StringItem = root;
+  const { id, $placeholder }: StringItem = schema;
 
   return getFieldDecorator(id, option)(
     <DatePicker format="YYYY-MM-DD HH:mm:ss" showTime={ true } placeholder={ $placeholder } />
@@ -87,13 +87,13 @@ export function date(
 
 // password
 export function password(
-  root: StringItem,
+  schema: StringItem,
   option: GetFieldDecoratorOptions,
   form: WrappedFormUtils,
   required: boolean
 ): React.ReactNode {
   const { getFieldDecorator }: WrappedFormUtils = form;
-  const { id, $readOnly, $placeholder }: StringItem = root;
+  const { id, $readOnly, $placeholder }: StringItem = schema;
 
   return getFieldDecorator(id, option)(<Input.Password readOnly={ $readOnly } placeholder={ $placeholder } />);
 }
@@ -101,13 +101,13 @@ export function password(
 /* number类型组件 */
 // 默认组件
 export function defaultNumber(
-  root: NumberItem,
+  schema: NumberItem,
   option: GetFieldDecoratorOptions,
   form: WrappedFormUtils,
   required: boolean
 ): React.ReactNode {
   const { getFieldDecorator }: WrappedFormUtils = form;
-  const { id, $readOnly, $placeholder }: NumberItem = root;
+  const { id, $readOnly, $placeholder }: NumberItem = schema;
 
   return getFieldDecorator(id, option)(
     <InputNumber className={ styleName('number-input') } readOnly={ $readOnly } placeholder={ $placeholder } />
@@ -117,26 +117,26 @@ export function defaultNumber(
 /* boolean类型组件 */
 // 默认组件
 export function defaultBoolean(
-  root: BooleanItem,
+  schema: BooleanItem,
   option: GetFieldDecoratorOptions,
   form: WrappedFormUtils,
   required: boolean
 ): React.ReactNode {
   const { getFieldDecorator }: WrappedFormUtils = form;
-  const { id }: BooleanItem = root;
+  const { id }: BooleanItem = schema;
 
   return getFieldDecorator(id, option)(<Checkbox />);
 }
 
 // switch组件
 export function switchComponent(
-  root: BooleanItem,
+  schema: BooleanItem,
   option: GetFieldDecoratorOptions,
   form: WrappedFormUtils,
   required: boolean
 ): React.ReactNode {
   const { getFieldDecorator }: WrappedFormUtils = form;
-  const { id }: BooleanItem = root;
+  const { id }: BooleanItem = schema;
 
   return getFieldDecorator(id, option)(<Switch />);
 }
@@ -144,41 +144,41 @@ export function switchComponent(
 /* Array类型组件 */
 // 默认组件
 export function defaultArray(
-  root: ArrayItem,
+  schema: ArrayItem,
   option: GetFieldDecoratorOptions,
   form: WrappedFormUtils,
   required: boolean
 ): React.ReactNode {
   // @ts-ignore
   const { getFieldProps }: WrappedFormUtils = form;
-  const { id }: ArrayItem = root;
+  const { id }: ArrayItem = schema;
   const props: any = omit(getFieldProps(id, option), ['ref']);
 
-  return <TableComponent root={ root } { ...props } />;
+  return <TableComponent schema={ schema } { ...props } />;
 }
 
 // checkbox group
 export function checkboxGroup(
-  root: ArrayItem,
+  schema: ArrayItem,
   option: GetFieldDecoratorOptions,
   form: WrappedFormUtils,
   required: boolean
 ): React.ReactNode {
   const { getFieldDecorator }: WrappedFormUtils = form;
-  const { id, $options = [] }: ArrayItem = root;
+  const { id, $options = [] }: ArrayItem = schema;
 
   return getFieldDecorator(id, option)(<Checkbox.Group options={ $options } />);
 }
 
 // multiple and tags
 export function multipleOrTags(
-  root: ArrayItem,
+  schema: ArrayItem,
   option: GetFieldDecoratorOptions,
   form: WrappedFormUtils,
   required: boolean
 ): React.ReactNode {
   const { getFieldDecorator }: WrappedFormUtils = form;
-  const { id, $options = [], $componentType }: ArrayItem = root;
+  const { id, $options = [], $componentType }: ArrayItem = schema;
 
   return getFieldDecorator(id, option)(
     <Select className={ styleName('array-multiple') } mode={ $componentType }>
@@ -189,11 +189,11 @@ export function multipleOrTags(
 
 /* object类型组件 */
 export function defaultOneOf(
-  root: SchemaItem,
+  schema: SchemaItem,
   form: WrappedFormUtils,
   element: React.ReactNodeArray
 ): React.ReactNode {
-  const { id }: SchemaItem = root;
+  const { id }: SchemaItem = schema;
 
-  return <OneOf key={ id } root={ root } element={ element } />;
+  return <OneOf key={ id } schema={ schema } element={ element } />;
 }

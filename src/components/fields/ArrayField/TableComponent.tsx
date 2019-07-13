@@ -32,7 +32,7 @@ function tableClassName(hasErr: boolean): string {
 }
 
 interface TableComponentProps {
-  root: ArrayItem;
+  schema: ArrayItem;
 }
 
 function TableComponent(props: PropsWithChildren<TableComponentProps>): React.ReactElement | null {
@@ -41,8 +41,8 @@ function TableComponent(props: PropsWithChildren<TableComponentProps>): React.Re
   if (!('form' in context)) return null; // 类型判断
 
   const { form, languagePack, customTableRender }: ContextValue = context;
-  const { root }: TableComponentProps = props;
-  const { id, items, minItems, maxItems, $minItemsMessage, $maxItemsMessage }: ArrayItem = root;
+  const { schema }: TableComponentProps = props;
+  const { id, items, minItems, maxItems, $minItemsMessage, $maxItemsMessage }: ArrayItem = schema;
   const { type, properties, title, $tableRender }: StringItem | NumberItem | BooleanItem | ArrayItem = items;
   // @ts-ignore
   const changeIndexRef: RefObject<Input> = useRef();
@@ -69,7 +69,7 @@ function TableComponent(props: PropsWithChildren<TableComponentProps>): React.Re
   function moveRow(dragIndex: number, hoverIndex: number): void {
     let tableValue: Array<any> | any = form.getFieldValue(id);
 
-    tableValue = isNil(tableValue) ? (root.$defaultValue || []) : tableValue;
+    tableValue = isNil(tableValue) ? (schema.$defaultValue || []) : tableValue;
 
     const dragRowItem: object = tableValue[dragIndex];
     const newData: { tableValue?: Array<object> } = update({ tableValue }, {
@@ -232,7 +232,7 @@ function TableComponent(props: PropsWithChildren<TableComponentProps>): React.Re
   function handleIndexInputBlur(index: number, event: React.FocusEvent<HTMLInputElement> | React.KeyboardEvent<HTMLInputElement>): void {
     let tableValue: Array<any> | any = form.getFieldValue(id);
 
-    tableValue = isNil(tableValue) ? (root.$defaultValue || []) : tableValue;
+    tableValue = isNil(tableValue) ? (schema.$defaultValue || []) : tableValue;
 
     const length: number = tableValue.length;
     let newIndex: number = Number(inputChangeIndex) - 1;
@@ -256,11 +256,11 @@ function TableComponent(props: PropsWithChildren<TableComponentProps>): React.Re
     const result: object = getValueFromObject(formatValue);
     let tableValue: Array<any> | any = form.getFieldValue(id);
 
-    tableValue = isNil(tableValue) ? (root.$defaultValue || []) : tableValue;
+    tableValue = isNil(tableValue) ? (schema.$defaultValue || []) : tableValue;
 
     // 判断是修改还是添加
     if (editIndex === undefined) {
-      tableValue[root.$addDataInReverseOrder ? 'unshift' : 'push'](result['items']);
+      tableValue[schema.$addDataInReverseOrder ? 'unshift' : 'push'](result['items']);
     } else {
       tableValue[editIndex] = result['items'];
     }
@@ -280,7 +280,7 @@ function TableComponent(props: PropsWithChildren<TableComponentProps>): React.Re
   function handleDeleteDataClick(index: number, event: React.MouseEvent<HTMLElement, MouseEvent>): void {
     let tableValue: Array<any> | any = form.getFieldValue(id);
 
-    tableValue = isNil(tableValue) ? (root.$defaultValue || []) : tableValue;
+    tableValue = isNil(tableValue) ? (schema.$defaultValue || []) : tableValue;
     tableValue.splice(index, 1);
     form.setFieldsValue({ [id]: tableValue });
   }
@@ -305,10 +305,10 @@ function TableComponent(props: PropsWithChildren<TableComponentProps>): React.Re
 
   // 删除选中的数据
   function handleDeleteSelectDataClick(event: React.MouseEvent<HTMLElement, MouseEvent>): void {
-    const id: string = root.id;
+    const id: string = schema.id;
     let tableValue: Array<any> | any = form.getFieldValue(id);
 
-    tableValue = isNil(tableValue) ? (root.$defaultValue || []) : tableValue;
+    tableValue = isNil(tableValue) ? (schema.$defaultValue || []) : tableValue;
     // 删除选中的数据
     const sortSelectedRowKeys: number[] = sortIndex(selectedRowKeys);
 
@@ -427,7 +427,7 @@ function TableComponent(props: PropsWithChildren<TableComponentProps>): React.Re
     if (editIndex !== undefined) {
       let tableValue: Array<any> | any = form.getFieldValue(id);
 
-      tableValue = isNil(tableValue) ? (root.$defaultValue || []) : tableValue;
+      tableValue = isNil(tableValue) ? (schema.$defaultValue || []) : tableValue;
 
       const itemValue: any = tableValue[editIndex];
       const result: object = getObjectFromValue({ items: itemValue }, id);
@@ -439,7 +439,7 @@ function TableComponent(props: PropsWithChildren<TableComponentProps>): React.Re
   const inputNotDisplay: boolean = isNil(inputDisplayIndex);
   let value: Array<any> | any = form.getFieldValue(id);
 
-  value = isNil(value) ? (root.$defaultValue || []) : value;
+  value = isNil(value) ? (schema.$defaultValue || []) : value;
 
   // 对数组内的元素数量进行验证
   let arrayRulesVerificationResult: string | undefined = undefined;
@@ -496,7 +496,7 @@ function TableComponent(props: PropsWithChildren<TableComponentProps>): React.Re
       </p>
       {/* 添加和修改数据的抽屉组件 */}
       <Drawer width="100%" visible={ isDisplayDataDrawer } destroyOnClose={ true } closable={ false }>
-        <ObjectField root={ items }
+        <ObjectField schema={ items }
           okText={ editIndex !== undefined ? undefined : languagePack.formObject.addOkText }
           cancelText={ editIndex !== undefined ? undefined : languagePack.formObject.addCancelText }
           onOk={ handleAddOrEditDataClick }
@@ -508,7 +508,7 @@ function TableComponent(props: PropsWithChildren<TableComponentProps>): React.Re
 }
 
 TableComponent.propTypes = {
-  root: PropTypes.object
+  schema: PropTypes.object
 };
 
 export default TableComponent;

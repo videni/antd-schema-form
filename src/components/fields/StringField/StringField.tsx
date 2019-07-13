@@ -21,7 +21,7 @@ import { StringItem, ContextValue } from '../../../types';
  *   patternMessage, minLengthMessage, maxLengthMessage, options, defaultValue, placeholder
  */
 interface StringFieldProps {
-  root: StringItem;
+  schema: StringItem;
   required: boolean;
 }
 
@@ -31,15 +31,15 @@ function StringField(props: PropsWithChildren<StringFieldProps>): React.ReactEle
   if (!('form' in context)) return null; // 类型判断
 
   const { form, registry, languagePack }: ContextValue = context;
-  const { root, required }: StringFieldProps = props; // type=object时，会判断key是否存在于required数组中
+  const { schema, required }: StringFieldProps = props; // type=object时，会判断key是否存在于required数组中
   const {
     title,
     description,
     $componentType,
     $defaultValue,
     $hidden
-  }: StringItem = root;
-  const rules: Array<ValidationRule> = createStringRules(languagePack, root, required);
+  }: StringItem = schema;
+  const rules: Array<ValidationRule> = createStringRules(languagePack, schema, required);
   const option: GetFieldDecoratorOptions = { rules };
 
   // 表单默认值
@@ -54,8 +54,8 @@ function StringField(props: PropsWithChildren<StringFieldProps>): React.ReactEle
 
   if (registry) {
     element = ($componentType && $componentType in registry)
-      ? registry[$componentType](root, option, form, required)
-      : createElement(registry.defaultString, [root, option, form, required]);
+      ? registry[$componentType](schema, option, form, required)
+      : createElement(registry.defaultString, [schema, option, form, required]);
   }
 
   return (
@@ -68,7 +68,7 @@ function StringField(props: PropsWithChildren<StringFieldProps>): React.ReactEle
 }
 
 StringField.propTypes = {
-  root: PropTypes.object,
+  schema: PropTypes.object,
   required: PropTypes.bool
 };
 

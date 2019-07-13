@@ -16,7 +16,7 @@ import createElement from '../../../utils/createElement';
  * 扩展属性包括：componentType
  */
 interface BooleanFieldProps {
-  root: BooleanItem;
+  schema: BooleanItem;
   required: boolean;
 }
 
@@ -26,8 +26,8 @@ function BooleanField(props: PropsWithChildren<BooleanFieldProps>): React.ReactE
   if (!('form' in context)) return null; // 类型判断
 
   const { form, registry }: ContextValue = context;
-  const { root, required }: BooleanFieldProps = props;
-  const { title, description, $componentType, $defaultValue, $hidden }: BooleanItem = root;
+  const { schema, required }: BooleanFieldProps = props;
+  const { title, description, $componentType, $defaultValue, $hidden }: BooleanItem = schema;
   const option: GetFieldDecoratorOptions = {
     valuePropName: 'checked'
   };
@@ -39,8 +39,8 @@ function BooleanField(props: PropsWithChildren<BooleanFieldProps>): React.ReactE
 
   if (registry) {
     element = ($componentType && $componentType in registry)
-      ? registry[$componentType](root, option, form, required)
-      : createElement(registry.defaultBoolean, [root, option, form, required]);
+      ? registry[$componentType](schema, option, form, required)
+      : createElement(registry.defaultBoolean, [schema, option, form, required]);
   }
 
   return (
@@ -53,7 +53,7 @@ function BooleanField(props: PropsWithChildren<BooleanFieldProps>): React.ReactE
 }
 
 BooleanField.propTypes = {
-  root: PropTypes.object
+  schema: PropTypes.object
 };
 
 export default BooleanField;
