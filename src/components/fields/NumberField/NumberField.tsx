@@ -34,7 +34,7 @@ function NumberField(props: PropsWithChildren<NumberFieldProps>): React.ReactEle
     type,
     title,
     description,
-    $componentType,
+    $widget,
     $defaultValue,
     $hidden
   }: NumberItem = schema;
@@ -44,18 +44,18 @@ function NumberField(props: PropsWithChildren<NumberFieldProps>): React.ReactEle
   // 表单默认值
   if ($defaultValue) option.initialValue = $defaultValue;
 
-  let element: React.ReactNode = null;
+  let widget: React.ReactNode = null;
 
   if (registry) {
-    element = ($componentType && $componentType in registry)
-      ? registry[$componentType](schema, option, form, required)
+    widget = ($widget && $widget in registry)
+      ? registry[$widget](schema, option, form, required)
       : createElement(registry.defaultNumber, [schema, option, form, required]);
   }
 
   return (
     <Form.Item className={ $hidden ? styleName('hidden') : undefined } label={ title }>
       <Tooltip title={ description } placement="topRight">
-        { element }
+        { widget }
       </Tooltip>
     </Form.Item>
   );

@@ -33,8 +33,8 @@ function OneOf(props: PropsWithChildren<OneOfProps>): React.ReactElement | null 
     if (
       oneOf
       && oneOf[newIndex].type === 'string' && oneOf[oldIndex].type === 'string'                    // 新旧组件都为string
-      && ((oneOf[oldIndex].$componentType !== 'date' && oneOf[newIndex].$componentType === 'date') // 判断是否为date组件
-      || (oneOf[oldIndex].$componentType === 'date' && oneOf[newIndex].$componentType !== 'date'))
+      && ((oneOf[oldIndex].$widget !== 'date' && oneOf[newIndex].$widget === 'date') // 判断是否为date组件
+      || (oneOf[oldIndex].$widget === 'date' && oneOf[newIndex].$widget !== 'date'))
     ) {
       form.resetFields([id]);
     }

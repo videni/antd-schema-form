@@ -178,10 +178,10 @@ export function multipleOrTags(
   required: boolean
 ): React.ReactNode {
   const { getFieldDecorator }: WrappedFormUtils = form;
-  const { id, $options = [], $componentType }: ArrayItem = schema;
+  const { id, $options = [], $widget }: ArrayItem = schema;
 
   return getFieldDecorator(id, option)(
-    <Select className={ styleName('array-multiple') } mode={ $componentType }>
+    <Select className={ styleName('array-multiple') } mode={ $widget }>
       { selectOptionsRender($options) }
     </Select>
   );

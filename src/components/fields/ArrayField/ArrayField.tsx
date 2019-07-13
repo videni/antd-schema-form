@@ -29,7 +29,7 @@ function ArrayField(props: PropsWithChildren<ArrayFieldProps>): React.ReactEleme
 
   const { form, registry, languagePack }: ContextValue = context;
   const { schema, required }: ArrayFieldProps = props;
-  const { title, description, $componentType, $defaultValue, $hidden }: ArrayItem = schema;
+  const { title, description, $widget, $defaultValue, $hidden }: ArrayItem = schema;
   const rules: Array<ValidationRule> = createArrayRules(languagePack, schema, required);
   const option: GetFieldDecoratorOptions = { rules };
   let isTableComponent: boolean = false; // 判断是否为table组件
@@ -37,16 +37,16 @@ function ArrayField(props: PropsWithChildren<ArrayFieldProps>): React.ReactEleme
   // 表单默认值
   if ($defaultValue) option.initialValue = $defaultValue;
 
-  let element: React.ReactNode = null;
+  let widget: React.ReactNode = null;
 
   if (registry) {
     // TODO: 此处渲染的是CheckBox.Group，但是组件名称是"checkbox"
-    const cType: string | undefined = $componentType === 'checkbox' ? 'checkboxGroup' : $componentType;
+    const cType: string | undefined = $widget === 'checkbox' ? 'checkboxGroup' : $widget;
 
     if (cType && cType in registry) {
-      element = registry[cType](schema, option, form, required);
+      widget = registry[cType](schema, option, form, required);
     } else {
-      element = createElement(registry.defaultArray, [schema, option, form, required]);
+      widget = createElement(registry.defaultArray, [schema, option, form, required]);
       isTableComponent = true;
     }
   }
@@ -59,7 +59,7 @@ function ArrayField(props: PropsWithChildren<ArrayFieldProps>): React.ReactEleme
   return (
     <Form.Item className={ classname } label={ title }>
       <Tooltip title={ description } placement="topRight">
-        { element }
+        { widget }
       </Tooltip>
     </Form.Item>
   );

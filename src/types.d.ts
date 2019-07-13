@@ -26,7 +26,7 @@ export interface SchemaItem {
   $hidden?: boolean;
   $tableColumnHidden?: boolean;
   $tableRender?: string;
-  $componentType?: string;
+  $widget?: string;
   $oneOfComponentType?: string;
 }
 

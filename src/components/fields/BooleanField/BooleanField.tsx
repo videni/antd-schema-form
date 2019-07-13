@@ -27,7 +27,7 @@ function BooleanField(props: PropsWithChildren<BooleanFieldProps>): React.ReactE
 
   const { form, registry }: ContextValue = context;
   const { schema, required }: BooleanFieldProps = props;
-  const { title, description, $componentType, $defaultValue, $hidden }: BooleanItem = schema;
+  const { title, description, $widget, $defaultValue, $hidden }: BooleanItem = schema;
   const option: GetFieldDecoratorOptions = {
     valuePropName: 'checked'
   };
@@ -35,18 +35,18 @@ function BooleanField(props: PropsWithChildren<BooleanFieldProps>): React.ReactE
   // 表单默认值
   if ($defaultValue) option.initialValue = $defaultValue;
 
-  let element: React.ReactNode = null;
+  let widget: React.ReactNode = null;
 
   if (registry) {
-    element = ($componentType && $componentType in registry)
-      ? registry[$componentType](schema, option, form, required)
+    widget = ($widget && $widget in registry)
+      ? registry[$widget](schema, option, form, required)
       : createElement(registry.defaultBoolean, [schema, option, form, required]);
   }
 
   return (
     <Form.Item className={ $hidden ? styleName('hidden') : undefined } label={ title }>
       <Tooltip title={ description } placement="topRight">
-        { element }
+        { widget }
       </Tooltip>
     </Form.Item>
   );

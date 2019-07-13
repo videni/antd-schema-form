@@ -94,7 +94,7 @@ function ObjectField(props: PropsWithChildren<ObjectFieldProps>): React.ReactEle
   // oneOf组件
   function renderOneOfComponentView(schema: SchemaItem, required: boolean): React.ReactNode {
     const { oneOf, $oneOfComponentType }: SchemaItem = schema;
-    const element: React.ReactNodeArray = [];
+    const widget: React.ReactNodeArray = [];
 
     (oneOf || []).forEach((value: SchemaItem, index: number, array: Array<SchemaItem>): void => {
       const childrenRoot: SchemaItem = { ...value };
@@ -106,15 +106,15 @@ function ObjectField(props: PropsWithChildren<ObjectFieldProps>): React.ReactEle
         }
       }
 
-      element.push(renderComponentByTypeView(childrenRoot, required));
+      widget.push(renderComponentByTypeView(childrenRoot, required));
     });
 
     let oneOfElement: React.ReactNode = null;
 
     if (registry) {
       oneOfElement = $oneOfComponentType && $oneOfComponentType in registry
-        ? registry[$oneOfComponentType](schema, form, element)
-        : createElement(registry.defaultOneOf, [schema, form, element]);
+        ? registry[$oneOfComponentType](schema, form, widget)
+        : createElement(registry.defaultOneOf, [schema, form, widget]);
     }
 
     return oneOfElement;
@@ -138,10 +138,10 @@ function ObjectField(props: PropsWithChildren<ObjectFieldProps>): React.ReactEle
 
   // 渲染一个object组件
   function renderObjectComponentView(schema: SchemaItem): React.ReactNode {
-    const { id, title, description, $componentType }: SchemaItem = schema;
+    const { id, title, description, $widget }: SchemaItem = schema;
     const required: Array<string> = schema.required || [];
     const properties: object = schema.properties || {};
-    const element: React.ReactNodeArray = [];
+    const widget: React.ReactNodeArray = [];
     let keyDepMap: { [key: string]: string[] } | undefined = undefined;
 
     // 获取dependencies的值
@@ -163,7 +163,7 @@ function ObjectField(props: PropsWithChildren<ObjectFieldProps>): React.ReactEle
         isDependenciesDisplay = undefined;
       }
 
-      element.push(renderComponentByTypeView(
+      widget.push(renderComponentByTypeView(
         properties[key],
         isDependenciesDisplay || required.includes(key), // 当被依赖时，表单必须填写
         isDependenciesDisplay
@@ -176,12 +176,12 @@ function ObjectField(props: PropsWithChildren<ObjectFieldProps>): React.ReactEle
       <span className={ styleName('object-description') } key="description">{ description }</span>
     ];
 
-    return (registry && $componentType && $componentType in registry)
-      ? registry[$componentType](schema, form, element)
+    return (registry && $widget && $widget in registry)
+      ? registry[$widget](schema, form, widget)
       : (
         <Collapse key={ id } className={ styleName('object-collapse') } defaultActiveKey={ [id] }>
           <Collapse.Panel key={ id } header={ header }>
-            { element }
+            { widget }
           </Collapse.Panel>
         </Collapse>
       );

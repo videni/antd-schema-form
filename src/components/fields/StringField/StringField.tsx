@@ -35,7 +35,7 @@ function StringField(props: PropsWithChildren<StringFieldProps>): React.ReactEle
   const {
     title,
     description,
-    $componentType,
+    $widget,
     $defaultValue,
     $hidden
   }: StringItem = schema;
@@ -46,22 +46,22 @@ function StringField(props: PropsWithChildren<StringFieldProps>): React.ReactEle
   if ($defaultValue) option.initialValue = $defaultValue;
 
   // 格式化日历的日期
-  if ($componentType === 'date' && isString($defaultValue)) {
+  if ($widget === 'date' && isString($defaultValue)) {
     option.initialValue = moment($defaultValue);
   }
 
-  let element: React.ReactNode = null;
+  let widget: React.ReactNode = null;
 
   if (registry) {
-    element = ($componentType && $componentType in registry)
-      ? registry[$componentType](schema, option, form, required)
+    widget = ($widget && $widget in registry)
+      ? registry[$widget](schema, option, form, required)
       : createElement(registry.defaultString, [schema, option, form, required]);
   }
 
   return (
     <Form.Item className={ $hidden ? styleName('hidden') : undefined } label={ title }>
       <Tooltip title={ description } placement="topRight">
-        { element }
+        { widget }
       </Tooltip>
     </Form.Item>
   );
