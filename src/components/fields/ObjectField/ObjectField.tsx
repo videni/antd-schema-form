@@ -8,7 +8,7 @@ import isBoolean from 'lodash-es/isBoolean';
 import isString from 'lodash-es/isString';
 import transform from 'lodash-es/transform';
 import { Collapse, Button } from 'antd';
-import AntdSchemaFormContext from '../../../context';
+import FormContext from '../../../context';
 import styleName from '../../../utils/styleName';
 import StringField from '../StringField/StringField';
 import NumberField from '../NumberField/NumberField';
@@ -33,7 +33,7 @@ interface FormObjectProps {
 }
 
 function ObjectField(props: PropsWithChildren<FormObjectProps>): React.ReactElement | null {
-  const context: ContextValue | {} = useContext(AntdSchemaFormContext);
+  const context: ContextValue | {} = useContext(FormContext);
 
   if (!('form' in context)) return null; // 类型判断
 

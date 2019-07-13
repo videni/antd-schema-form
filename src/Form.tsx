@@ -2,15 +2,15 @@ import * as React from 'react';
 import { useEffect, PropsWithChildren } from 'react';
 import * as PropTypes from 'prop-types';
 import isPlainObject from 'lodash-es/isPlainObject';
-import { Form } from 'antd';
+import { Form as AntdForm } from 'antd';
 import { FormComponentProps } from 'antd/lib/form/Form';
-import AntdSchemaFormContext from './context';
+import FormContext from './context';
 import ObjectField from './components/fields/ObjectField/ObjectField';
 import getObjectFromValue from './utils/getObjectFromValue';
 import languagePack from './languagePack';
 import { SchemaItem, ContextValue } from './types';
 
-export interface SchemaFormProps extends FormComponentProps {
+export interface FormProps extends FormComponentProps {
   json: SchemaItem;
   value?: any;
   onOk?: Function;
@@ -25,7 +25,7 @@ export interface SchemaFormProps extends FormComponentProps {
   languagePack?: object;
 }
 
-function SchemaForm(props: PropsWithChildren<SchemaFormProps>): React.ReactElement | null {
+function Form(props: PropsWithChildren<FormProps>): React.ReactElement | null {
   const {
     value: schemaFormValue,
     form,
@@ -37,7 +37,7 @@ function SchemaForm(props: PropsWithChildren<SchemaFormProps>): React.ReactEleme
     footer,
     customComponent,
     customTableRender
-  }: SchemaFormProps = props;
+  }: FormProps = props;
   // 获取系统语言
   const language: string = typeof window === 'object' // 服务器端渲染判断
     ? (window.navigator.language || window.navigator['userLanguage']).toLocaleLowerCase()
@@ -63,7 +63,7 @@ function SchemaForm(props: PropsWithChildren<SchemaFormProps>): React.ReactEleme
   }, [schemaFormValue]);
 
   return (
-    <AntdSchemaFormContext.Provider value={ contextValue }>
+    <FormContext.Provider value={ contextValue }>
       <ObjectField root={ json }
         onOk={ onOk }
         onCancel={ onCancel }
@@ -71,11 +71,11 @@ function SchemaForm(props: PropsWithChildren<SchemaFormProps>): React.ReactEleme
         cancelText={ cancelText }
         footer={ footer }
       />
-    </AntdSchemaFormContext.Provider>
+    </FormContext.Provider>
   );
 }
 
-SchemaForm.propTypes = {
+Form.propTypes = {
   json: PropTypes.object.isRequired,
   value: PropTypes.object,
   onOk: PropTypes.func,
@@ -94,10 +94,10 @@ SchemaForm.propTypes = {
   languagePack: PropTypes.object
 };
 
-SchemaForm.defaultProps = {
+Form.defaultProps = {
   customComponent: {},
   customTableRender: {}
 };
 
 // @ts-ignore
-export default Form.create()(SchemaForm);
+export default AntdForm.create()(Form);

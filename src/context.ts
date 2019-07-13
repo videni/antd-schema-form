@@ -1,6 +1,6 @@
 import { createContext, Context } from 'react';
 import { ContextValue } from './types';
 
-const AntdSchemaFormContext: Context<ContextValue | {}> = createContext({});
+const FormContext: Context<ContextValue | {}> = createContext({});
 
-export default AntdSchemaFormContext;
+export default FormContext;

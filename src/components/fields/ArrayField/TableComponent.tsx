@@ -9,7 +9,7 @@ import { Table, Button, Popconfirm, Drawer, Input } from 'antd';
 import { WrappedFormUtils } from 'antd/lib/form/Form';
 import { TableComponents } from 'antd/lib/table';
 import update from 'immutability-helper';
-import AntdSchemaFormContext from '../../../context';
+import FormContext from '../../../context';
 import getValueFromObject, { formatValueBeforeGetValue } from '../../../utils/getValueFromObject';
 import getObjectFromValue from '../../../utils/getObjectFromValue';
 import { formatTableValue, sortIndex } from './tableFunction';
@@ -36,7 +36,7 @@ interface TableComponentProps {
 }
 
 function TableComponent(props: PropsWithChildren<TableComponentProps>): React.ReactElement | null {
-  const context: ContextValue | {} = useContext(AntdSchemaFormContext);
+  const context: ContextValue | {} = useContext(FormContext);
 
   if (!('form' in context)) return null; // 类型判断
 

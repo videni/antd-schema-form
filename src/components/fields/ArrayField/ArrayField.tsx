@@ -4,7 +4,7 @@ import * as PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Form, Tooltip } from 'antd';
 import { GetFieldDecoratorOptions, ValidationRule } from 'antd/lib/form/Form';
-import AntdSchemaFormContext from '../../../context';
+import FormContext from '../../../context';
 import styleName from '../../../utils/styleName';
 import createArrayRules from './createArrayRules';
 import createElement from '../../../utils/createElement';
@@ -23,7 +23,7 @@ interface FormArrayProps {
 }
 
 function ArrayField(props: PropsWithChildren<FormArrayProps>): React.ReactElement | null {
-  const context: ContextValue | {} = useContext(AntdSchemaFormContext);
+  const context: ContextValue | {} = useContext(FormContext);
 
   if (!('form' in context)) return null; // 类型判断
 

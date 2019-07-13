@@ -6,7 +6,7 @@ import { Form, Tooltip } from 'antd';
 import { ValidationRule } from 'antd/lib/form';
 import { GetFieldDecoratorOptions } from 'antd/lib/form/Form';
 import * as moment from 'moment';
-import AntdSchemaFormContext from '../../../context';
+import FormContext from '../../../context';
 import styleName from '../../../utils/styleName';
 import createStringRules from './createStringRules';
 import createElement from '../../../utils/createElement';
@@ -26,7 +26,7 @@ interface StringFieldProps {
 }
 
 function StringField(props: PropsWithChildren<StringFieldProps>): React.ReactElement | null {
-  const context: ContextValue | {} = useContext(AntdSchemaFormContext);
+  const context: ContextValue | {} = useContext(FormContext);
 
   if (!('form' in context)) return null; // 类型判断
 
