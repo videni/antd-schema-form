@@ -15,8 +15,9 @@ import NumberField from '../NumberField/NumberField';
 import BooleanField from '../BooleanField/BooleanField';
 import ArrayField from '../ArrayField/ArrayField';
 import createElement from '../../../utils/createElement';
-import { Schema, ContextValue } from '../../../types';
+import { Schema, ContextProps } from '../../../types';
 import SchemaField from '../SchemaField';
+import { getWidget } from '../../../utils/widgetMap';
 
 /**
  * 当类型为object时的组件渲染
@@ -26,27 +27,12 @@ interface ObjectFieldProps {
   schema: Schema;
 }
 
-function DefaultObjectFieldTemplate(props: {
-  id: string;
-  header: React.ReactNodeArray;
-  propertyFields: React.ReactNodeArray;
-}): React.ReactElement {
-  const { id, header, propertyFields } = props;
-
-  return (
-    <Collapse key={ id } className={ styleName('object-collapse') } defaultActiveKey={ [id] }>
-      <Collapse.Panel key={ id } header={ header }>
-        { propertyFields }
-      </Collapse.Panel>
-    </Collapse>);
-}
-
 function ObjectField(props: PropsWithChildren<ObjectFieldProps>): React.ReactElement | null {
-  const context: ContextValue | {} = useContext(FormContext);
+  const context: ContextProps | {} = useContext(FormContext);
 
   if (!('form' in context)) return null; // 类型判断
 
-  const { form, registry, languagePack }: ContextValue = context;
+  const { form, registry, languagePack }: ContextProps = context;
   const {
     schema
   }: ObjectFieldProps = props;
@@ -69,7 +55,12 @@ function ObjectField(props: PropsWithChildren<ObjectFieldProps>): React.ReactEle
 
   // 渲染一个object组件
   function objectFieldRender(schema: Schema): React.ReactNode {
-    const { id, title, description, $widget }: Schema = schema;
+    const { id,
+      title,
+      description,
+      $widget = 'object'
+    }: Schema = schema;
+
     const required: Array<string> = schema.required || [];
     const properties: object = schema.properties || {};
     const propertyFields: React.ReactNodeArray = [];
@@ -94,8 +85,6 @@ function ObjectField(props: PropsWithChildren<ObjectFieldProps>): React.ReactEle
         isDependenciesDisplay = undefined;
       }
 
-      // console.log(properties[key]);
-
       propertyFields.push(
         <SchemaField schema={ properties[key] }
           key={ key }
@@ -111,12 +100,11 @@ function ObjectField(props: PropsWithChildren<ObjectFieldProps>): React.ReactEle
       <span className={ styleName('object-description') } key="description">{ description }</span>
     ];
 
-    const { widgets } = registry;
+    const Widget: React.ReactElement = getWidget($widget, registry.widgets);
 
-    return ($widget && $widget in widgets)
-      ? widgets[$widget](schema, form, $widget)
-      : (
-        <DefaultObjectFieldTemplate id={ id }
+    console.log(Widget);
+    return (
+        <Widget id={ id }
           propertyFields={ propertyFields }
           header={ header }
         />

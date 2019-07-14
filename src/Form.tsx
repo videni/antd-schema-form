@@ -8,7 +8,7 @@ import FormContext from './context';
 import ObjectField from './components/fields/ObjectField/ObjectField';
 import getObjectFromValue from './utils/getObjectFromValue';
 import languagePack from './languagePack';
-import { Schema, ContextValue } from './types';
+import { Schema, ContextProps } from './types';
 import SchemaField from './components/fields/SchemaField';
 import getValueFromObject from './utils/getValueFromObject';
 import getKeysFromObject from './utils/getKeysFromObject';
@@ -52,7 +52,7 @@ function Form(props: PropsWithChildren<FormProps>): React.ReactElement | null {
   }: FormProps = props;
 
 
-  const contextValue: ContextValue = {
+  const ContextProps: ContextProps = {
     form,
     registry,
     customTableRender,
@@ -110,7 +110,7 @@ function Form(props: PropsWithChildren<FormProps>): React.ReactElement | null {
   }
 
   return (
-    <FormContext.Provider value={ contextValue }>
+    <FormContext.Provider value={ ContextProps }>
       <AntdForm >
         <SchemaField schema={ schema } />
         { footer ? footer(form) : footerView() }

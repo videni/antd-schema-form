@@ -33,10 +33,12 @@ const formData = {
 // 自定义组件
 const registry = {
   widgets: {
-    custom: (item, option, form, required) => {
+    custom: (props) => {
+      const { schema, option, form, required } = props;
+
       const { getFieldDecorator } = form;
 
-      return getFieldDecorator(item.id, option)(
+      return getFieldDecorator(schema.id, option)(
         <Input placeholder="自定义组件" required={ required } addonAfter={ <Icon type="setting" /> } />
       );
     }
@@ -57,7 +59,7 @@ function Form(props) {
   return (
     <SchemaForm schema={ schema }
       formData={ formData }
-      customRegistry={ registry }
+      registry={ registry }
       customTableRender={ customTableRender }
       onOk={ (form, formData, keys) => console.log(formData, keys) }
       okText="提交"

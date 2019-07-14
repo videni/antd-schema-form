@@ -10,7 +10,8 @@ import FormContext from '../../../context';
 import styleName from '../../../utils/styleName';
 import createStringRules from './createStringRules';
 import createElement from '../../../utils/createElement';
-import { StringSchema, ContextValue } from '../../../types';
+import { StringSchema, ContextProps } from '../../../types';
+import { getWidget } from '../../../utils/widgetMap';
 
 /**
  * 当类型为string时的组件渲染
@@ -26,16 +27,16 @@ interface StringFieldProps {
 }
 
 function StringField(props: PropsWithChildren<StringFieldProps>): React.ReactElement | null {
-  const context: ContextValue | {} = useContext(FormContext);
+  const context: ContextProps | {} = useContext(FormContext);
 
   if (!('form' in context)) return null; // 类型判断
 
-  const { form, registry, languagePack }: ContextValue = context;
+  const { form, registry, languagePack }: ContextProps = context;
   const { schema, required }: StringFieldProps = props; // type=object时，会判断key是否存在于required数组中
   const {
     title,
     description,
-    $widget,
+    $widget= 'text',
     $defaultValue,
     $hidden
   }: StringSchema = schema;
@@ -50,16 +51,16 @@ function StringField(props: PropsWithChildren<StringFieldProps>): React.ReactEle
     option.initialValue = moment($defaultValue);
   }
 
-  let widget: React.ReactNode = null;
-
-  widget = ($widget && $widget in registry.widgets)
-      ? registry.widgets[$widget](schema, option, form, required)
-      : createElement(registry.widgets.defaultString, [schema, option, form, required]);
+  const Widget: React.ReactElement = getWidget($widget, registry.widgets);
 
   return (
     <Form.Item className={ $hidden ? styleName('hidden') : undefined } label={ title }>
       <Tooltip title={ description } placement="topRight">
-        { widget }
+        <Widget schema={schema}
+          option={option}
+          form={form}
+          required={required}
+        />
       </Tooltip>
     </Form.Item>
   );

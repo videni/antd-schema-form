@@ -1,7 +1,8 @@
 import { WrappedFormUtils } from 'antd/lib/form/Form';
 import { Registry } from './registry';
+import * as React from 'react';
 
-export interface ContextValue {
+export interface ContextProps {
   form: WrappedFormUtils;
   registry: Registry;
   customTableRender?: object;

@@ -16,7 +16,7 @@ import { formatTableValue, sortIndex } from './tableFunction';
 import ObjectField from '../ObjectField/ObjectField';
 import styleName from '../../../utils/styleName';
 import template from '../../../utils/template';
-import { Schema, StringSchema, NumberSchema, BooleanSchema, ArraySchema, ContextValue } from '../../../types';
+import { Schema, StringSchema, NumberSchema, BooleanSchema, ArraySchema, ContextProps } from '../../../types';
 
 // 拖拽相关变量
 const tableDragClassName: [string, string] = [
@@ -36,11 +36,11 @@ interface TableComponentProps {
 }
 
 function TableComponent(props: PropsWithChildren<TableComponentProps>): React.ReactElement | null {
-  const context: ContextValue | {} = useContext(FormContext);
+  const context: ContextProps | {} = useContext(FormContext);
 
   if (!('form' in context)) return null; // 类型判断
 
-  const { form, languagePack, customTableRender }: ContextValue = context;
+  const { form, languagePack, customTableRender }: ContextProps = context;
   const { schema }: TableComponentProps = props;
   const { id, items, minItems, maxItems, $minItemsMessage, $maxItemsMessage }: ArraySchema = schema;
   const { type, properties, title, $tableRender }: StringSchema | NumberSchema | BooleanSchema | ArraySchema = items;

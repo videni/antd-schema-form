@@ -8,7 +8,8 @@ import FormContext from '../../../context';
 import styleName from '../../../utils/styleName';
 import createArrayRules from './createArrayRules';
 import createElement from '../../../utils/createElement';
-import { ArraySchema, ContextValue } from '../../../types';
+import { ArraySchema, ContextProps } from '../../../types';
+import { getWidget } from '../../../utils/widgetMap';
 
 /**
  * 当类型为array时的组件渲染
@@ -23,13 +24,19 @@ interface ArrayFieldProps {
 }
 
 function ArrayField(props: PropsWithChildren<ArrayFieldProps>): React.ReactElement | null {
-  const context: ContextValue | {} = useContext(FormContext);
+  const context: ContextProps | {} = useContext(FormContext);
 
   if (!('form' in context)) return null; // 类型判断
 
-  const { form, registry, languagePack }: ContextValue = context;
+  const { form, registry, languagePack }: ContextProps = context;
   const { schema, required }: ArrayFieldProps = props;
-  const { title, description, $widget, $defaultValue, $hidden }: ArraySchema = schema;
+  const {
+    title,
+    description,
+    $widget = 'array',
+    $defaultValue,
+    $hidden
+  }: ArraySchema = schema;
   const rules: Array<ValidationRule> = createArrayRules(languagePack, schema, required);
   const option: GetFieldDecoratorOptions = { rules };
   let isTableComponent: boolean = false; // 判断是否为table组件
@@ -37,19 +44,11 @@ function ArrayField(props: PropsWithChildren<ArrayFieldProps>): React.ReactEleme
   // 表单默认值
   if ($defaultValue) option.initialValue = $defaultValue;
 
-  let widget: React.ReactNode = null;
+  // TODO: 此处渲染的是CheckBox.Group，但是组件名称是"checkbox"
+  const cType: string | undefined = $widget === 'checkbox' ? 'checkboxGroup' : $widget;
 
-  if (registry) {
-    // TODO: 此处渲染的是CheckBox.Group，但是组件名称是"checkbox"
-    const cType: string | undefined = $widget === 'checkbox' ? 'checkboxGroup' : $widget;
-
-    if (cType && cType in registry.widgets) {
-      widget = registry.widgets[cType](schema, option, form, required);
-    } else {
-      widget = createElement(registry.widgets.defaultArray, [schema, option, form, required]);
-      isTableComponent = true;
-    }
-  }
+  const Widget: React.ReactElement = getWidget(cType, registry.widgets);
+  isTableComponent = cType === 'array';
 
   const classname: string = classNames({
     [styleName('array-table-form-item')]: isTableComponent,
@@ -59,7 +58,11 @@ function ArrayField(props: PropsWithChildren<ArrayFieldProps>): React.ReactEleme
   return (
     <Form.Item className={ classname } label={ title }>
       <Tooltip title={ description } placement="topRight">
-        { widget }
+        <Widget schema={schema}
+          option={option}
+          form={form}
+          required={required}
+        />
       </Tooltip>
     </Form.Item>
   );

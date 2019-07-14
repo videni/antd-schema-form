@@ -7,8 +7,9 @@ import { GetFieldDecoratorOptions } from 'antd/lib/form/Form';
 import FormContext from '../../../context';
 import styleName from '../../../utils/styleName';
 import createNumberRules from './createNumberRules';
-import { NumberSchema, ContextValue } from '../../../types';
+import { NumberSchema, ContextProps } from '../../../types';
 import createElement from '../../../utils/createElement';
+import { getWidget } from '../../../utils/widgetMap';
 
 /**
  * 当类型为number和integer时的组件渲染
@@ -24,17 +25,17 @@ interface NumberFieldProps {
 }
 
 function NumberField(props: PropsWithChildren<NumberFieldProps>): React.ReactElement | null {
-  const context: ContextValue | {} = useContext(FormContext);
+  const context: ContextProps | {} = useContext(FormContext);
 
   if (!('form' in context)) return null; // 类型判断
 
-  const { form, registry, languagePack }: ContextValue = context;
+  const { form, registry, languagePack }: ContextProps = context;
   const { schema, required }: NumberFieldProps = props; // type=object时，会判断key是否存在于required数组中
   const {
     type,
     title,
     description,
-    $widget,
+    $widget='number',
     $defaultValue,
     $hidden
   }: NumberSchema = schema;
@@ -44,16 +45,16 @@ function NumberField(props: PropsWithChildren<NumberFieldProps>): React.ReactEle
   // 表单默认值
   if ($defaultValue) option.initialValue = $defaultValue;
 
-  let widget: React.ReactNode = null;
-
-  widget = ($widget && $widget in registry.widgets)
-      ? registry.widgets[$widget](schema, option, form, required)
-      : createElement(registry.widgets.defaultNumber, [schema, option, form, required]);
+  const Widget: React.ReactElement = getWidget($widget, registry.widgets);
 
   return (
     <Form.Item className={ $hidden ? styleName('hidden') : undefined } label={ title }>
       <Tooltip title={ description } placement="topRight">
-        { widget }
+        <Widget schema={schema}
+          option={option}
+          form={form}
+          required={required}
+        />
       </Tooltip>
     </Form.Item>
   );

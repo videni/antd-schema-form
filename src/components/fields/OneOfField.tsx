@@ -5,7 +5,7 @@ import isNumber from 'lodash-es/isNumber';
 import { Radio } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import FormContext from '../../context';
-import { Schema, ContextValue } from '../../types';
+import { Schema, ContextProps } from '../../types';
 import SchemaField from './SchemaField';
 
 interface OneOfProps {
@@ -14,11 +14,11 @@ interface OneOfProps {
 }
 
 function OneOfField(props: PropsWithChildren<OneOfProps>): React.ReactElement | null {
-  const context: ContextValue | {} = useContext(FormContext);
+  const context: ContextProps | {} = useContext(FormContext);
 
   if (!('form' in context)) return null; // 类型判断
 
-  const { form }: ContextValue = context;
+  const { form }: ContextProps = context;
 
   const { $widget, schema }: OneOfProps = props;
   const { id, oneOf, $oneOfDisabled, $oneOfIndex }: Schema = schema;
