@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Schema } from '../../types';
 
-function UnsupportedField(props: { schema: Schema; $id: string; reason: string }) {
+function UnsupportedField(props: { schema: Schema; $id: string; reason: string }): React.ReactElement {
   const { schema, $id, reason } = props;
 
   return (

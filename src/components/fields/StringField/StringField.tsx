@@ -52,11 +52,9 @@ function StringField(props: PropsWithChildren<StringFieldProps>): React.ReactEle
 
   let widget: React.ReactNode = null;
 
-  if (registry) {
-    widget = ($widget && $widget in registry.widgets)
+  widget = ($widget && $widget in registry.widgets)
       ? registry.widgets[$widget](schema, option, form, required)
       : createElement(registry.widgets.defaultString, [schema, option, form, required]);
-  }
 
   return (
     <Form.Item className={ $hidden ? styleName('hidden') : undefined } label={ title }>

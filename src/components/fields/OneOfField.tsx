@@ -10,7 +10,7 @@ import SchemaField from './SchemaField';
 
 interface OneOfProps {
   schema: Schema;
-  widget: React.ReactNodeArray;
+  $widget?: string;
 }
 
 function OneOfField(props: PropsWithChildren<OneOfProps>): React.ReactElement | null {
@@ -20,7 +20,7 @@ function OneOfField(props: PropsWithChildren<OneOfProps>): React.ReactElement | 
 
   const { form }: ContextValue = context;
 
-  const { widget, schema }: OneOfProps = props;
+  const { $widget, schema }: OneOfProps = props;
   const { id, oneOf, $oneOfDisabled, $oneOfIndex }: Schema = schema;
 
   // oneOf选项卡的index
@@ -32,7 +32,7 @@ function OneOfField(props: PropsWithChildren<OneOfProps>): React.ReactElement | 
    * This case is type="string", the next control is date, because of the relationship of the moment,
    * so to clear the value of the component, it is best to avoid this situation
    */
-  function resetFieldsForDateWidget(newIndex, oldIndex) {
+  function resetFieldsForDateWidget(newIndex: number, oldIndex: number): void {
     if (
       oneOf
       && oneOf[newIndex].type === 'string' && oneOf[oldIndex].type === 'string'    // 新旧组件都为string
@@ -51,7 +51,7 @@ function OneOfField(props: PropsWithChildren<OneOfProps>): React.ReactElement | 
   }
 
   // 切换指定index
-  function handleDesignationIndexChange(event: RadioChangeEvent): void {
+  function onOptionChange(event: RadioChangeEvent): void {
     const value: unknown = event.target.value;
 
     if (typeof value === 'number') {
@@ -79,20 +79,18 @@ function OneOfField(props: PropsWithChildren<OneOfProps>): React.ReactElement | 
         size="small"
         options={ options }
         value={ index }
-        onChange={ $oneOfDisabled ? undefined : handleDesignationIndexChange }
+        onChange={ $oneOfDisabled ? undefined : onOptionChange }
       />
     );
   }
 
-  const optionSchema = oneOf[index];
+  const optionSchema: Schema = oneOf[index];
 
   return (
     <Fragment>
       { radioGroupView() }
       {optionSchema && (
-        <SchemaField schema={ optionSchema }
-          { ...props }
-        />
+        <SchemaField schema={ optionSchema } />
       )}
     </Fragment>
   );

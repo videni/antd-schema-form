@@ -9,9 +9,11 @@ import FormContext from '../../context';
 
 interface SchemaFieldProps {
   schema: Schema;
+  dependenciesDisplay?: boolean;
+  required?: boolean
 }
 
-const COMPONENT_TYPES = {
+const COMPONENT_TYPES: object = {
   array: 'ArrayField',
   boolean: 'BooleanField',
   number: 'NumberField',
@@ -19,7 +21,7 @@ const COMPONENT_TYPES = {
   string: 'StringField'
 };
 
-function getSchemaType(schema) {
+function getSchemaType(schema: Schema): string {
   const { type } = schema;
 
   if (!type && schema.enum) {
@@ -37,13 +39,13 @@ function getSchemaType(schema) {
   return type;
 }
 
-function getFieldComponent(schema: Schema, fields: object): React.ReactElement | null  {
+function getFieldComponent(schema: Schema, fields: object): React.ReactElement {
   const componentName: string = COMPONENT_TYPES[getSchemaType(schema)];
 
   // If the type is not defined and the schema uses'oneOf', don't
   // render a field and let the OneOfField component handle the form display
   if (!componentName && schema.oneOf) {
-    return null;
+    return () => null;
   }
 
   return componentName in fields
@@ -68,7 +70,7 @@ function SchemaField(props: PropsWithChildren<SchemaFieldProps>): React.ReactEle
   if (!('form' in context)) return null; // 类型判断
   const { registry: { fields } } = context;
 
-  const { schema, formData, dependenciesDisplay } = props;
+  const { schema, dependenciesDisplay, required } = props;
 
   // 判断是否渲染dependencies
   if (isBoolean(dependenciesDisplay) && !dependenciesDisplay) {
@@ -78,25 +80,21 @@ function SchemaField(props: PropsWithChildren<SchemaFieldProps>): React.ReactEle
   const FieldComponent = getFieldComponent(schema, fields);
 
   const field = (
-    <FieldComponent { ...props }
-    />
+    <FieldComponent { ...props } />
   );
 
   return (
     <Fragment>
       {field}
       {isOneOf(schema) && (
-        <OneOfField formData={ formData }
-          options={ schema.oneOf }
-          schema={ schema }
-        />
+        <OneOfField schema={ schema } />
       )}
     </Fragment>
   );
 }
 
 SchemaField.propTypes = {
-  schema: PropTypes.object.isRequired,
+  schema: PropTypes.object.isRequired
 };
 
 export default SchemaField;

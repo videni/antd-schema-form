@@ -46,11 +46,9 @@ function NumberField(props: PropsWithChildren<NumberFieldProps>): React.ReactEle
 
   let widget: React.ReactNode = null;
 
-  if (registry) {
-    widget = ($widget && $widget in registry.widgets)
+  widget = ($widget && $widget in registry.widgets)
       ? registry.widgets[$widget](schema, option, form, required)
       : createElement(registry.widgets.defaultNumber, [schema, option, form, required]);
-  }
 
   return (
     <Form.Item className={ $hidden ? styleName('hidden') : undefined } label={ title }>

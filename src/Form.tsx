@@ -9,22 +9,21 @@ import ObjectField from './components/fields/ObjectField/ObjectField';
 import getObjectFromValue from './utils/getObjectFromValue';
 import languagePack from './languagePack';
 import { Schema, ContextValue } from './types';
-import SchemaField  from './components/fields/SchemaField';
+import SchemaField from './components/fields/SchemaField';
 import getValueFromObject from './utils/getValueFromObject';
 import getKeysFromObject from './utils/getKeysFromObject';
 import styleName from './utils/styleName';
+import { Registry } from './registry';
 
 export interface FormProps extends FormComponentProps {
   schema: Schema;
+  registry: Registry;
   formData?: any;
   onOk?: Function;
   onCancel?: Function;
   okText?: string | number;
   cancelText?: string | number;
   footer?: Function;
-  registry?: {
-    [key: string]: Function;
-  };
   customTableRender?: object;
   languagePack?: object;
 }
@@ -112,10 +111,8 @@ function Form(props: PropsWithChildren<FormProps>): React.ReactElement | null {
 
   return (
     <FormContext.Provider value={ contextValue }>
-      <AntdForm onOk={onOk} >
-        <SchemaField schema={ schema }
-          footer={ footer }
-        />
+      <AntdForm >
+        <SchemaField schema={ schema } />
         { footer ? footer(form) : footerView() }
       </AntdForm>
     </FormContext.Provider>
@@ -124,7 +121,7 @@ function Form(props: PropsWithChildren<FormProps>): React.ReactElement | null {
 
 Form.propTypes = {
   schema: PropTypes.object.isRequired,
-  value: PropTypes.object,
+  formData: PropTypes.object,
   onOk: PropTypes.func,
   onCancel: PropTypes.func,
   okText: PropTypes.oneOfType([
@@ -136,13 +133,12 @@ Form.propTypes = {
     PropTypes.number
   ]),
   footer: PropTypes.func,
-  registry: PropTypes.object,
+  registry: PropTypes.object.isRequired,
   customTableRender: PropTypes.objectOf(PropTypes.func),
   languagePack: PropTypes.object
 };
 
 Form.defaultProps = {
-  registry: {},
   customTableRender: {}
 };
 

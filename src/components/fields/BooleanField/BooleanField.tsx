@@ -37,11 +37,9 @@ function BooleanField(props: PropsWithChildren<BooleanFieldProps>): React.ReactE
 
   let widget: React.ReactNode = null;
 
-  if (registry) {
-    widget = ($widget && $widget in registry.widgets)
-      ? registry.widgets[$widget](schema, option, form, required)
-      : createElement(registry.widgets.defaultBoolean, [schema, option, form, required]);
-  }
+  widget = ($widget && $widget in registry.widgets)
+    ? registry.widgets[$widget](schema, option, form, required)
+    : createElement(registry.widgets.defaultBoolean, [schema, option, form, required]);
 
   return (
     <Form.Item className={ $hidden ? styleName('hidden') : undefined } label={ title }>

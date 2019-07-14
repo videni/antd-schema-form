@@ -1,10 +1,9 @@
 import { WrappedFormUtils } from 'antd/lib/form/Form';
+import { Registry } from './registry';
 
 export interface ContextValue {
   form: WrappedFormUtils;
-  registry?: {
-    [key: string]: Function | object;
-  };
+  registry: Registry;
   customTableRender?: object;
   language?: string;
   languagePack?: any;

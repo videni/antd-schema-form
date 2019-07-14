@@ -5,19 +5,33 @@ import defaultRegistry from './registry';
 import getKeysFromObject from './utils/getKeysFromObject';
 import getObjectFromValue from './utils/getObjectFromValue';
 import getValueFromObject from './utils/getValueFromObject';
+import { Registry } from './registry';
+
+function createRegistry(defaultRegistry: Registry, customRegistry: Registry): Registry {
+  return {
+    widgets: {
+      ...defaultRegistry.widgets,
+      ...customRegistry.widgets
+    },
+    fields: {
+      ...defaultRegistry.fields,
+      ...customRegistry.fields
+    }
+  };
+}
 
 export default function(props: PropsWithChildren<FormProps>): React.ReactNode | null {
-  const { customRegistry, ...otherProps }: FormProps = props;
+  const customRegistry: Registry = props.registry || {};
   const [registry, setRegistry]: [
     object | undefined,
     Dispatch<SetStateAction<object>>
-  ] = useState(Object.assign(defaultRegistry, customRegistry || {}));
+  ] = useState(createRegistry(defaultRegistry, customRegistry));
 
   useEffect(function(): void {
-    setRegistry(Object.assign(defaultRegistry, customRegistry || {}));
+    setRegistry(createRegistry(defaultRegistry, customRegistry));
   }, [customRegistry]);
 
-  return <Form registry={ registry } { ...otherProps } />;
+  return <Form { ...props } registry={ registry } />;
 }
 
 export {

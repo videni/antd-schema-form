@@ -16,7 +16,7 @@ import BooleanField from '../BooleanField/BooleanField';
 import ArrayField from '../ArrayField/ArrayField';
 import createElement from '../../../utils/createElement';
 import { Schema, ContextValue } from '../../../types';
-import  SchemaField  from '../SchemaField';
+import SchemaField from '../SchemaField';
 
 /**
  * 当类型为object时的组件渲染
@@ -29,14 +29,14 @@ interface ObjectFieldProps {
 function DefaultObjectFieldTemplate(props: {
   id: string;
   header: React.ReactNodeArray;
-  widgets: React.ReactNodeArray;
+  propertyFields: React.ReactNodeArray;
 }): React.ReactElement {
-  const { id, header, widgets } = props;
+  const { id, header, propertyFields } = props;
 
   return (
     <Collapse key={ id } className={ styleName('object-collapse') } defaultActiveKey={ [id] }>
       <Collapse.Panel key={ id } header={ header }>
-        { widgets }
+        { propertyFields }
       </Collapse.Panel>
     </Collapse>);
 }
@@ -48,7 +48,7 @@ function ObjectField(props: PropsWithChildren<ObjectFieldProps>): React.ReactEle
 
   const { form, registry, languagePack }: ContextValue = context;
   const {
-    schema,
+    schema
   }: ObjectFieldProps = props;
 
   // 判断是否显示
@@ -69,10 +69,10 @@ function ObjectField(props: PropsWithChildren<ObjectFieldProps>): React.ReactEle
 
   // 渲染一个object组件
   function objectFieldRender(schema: Schema): React.ReactNode {
-    const { id, title, description, $widget}: Schema = schema;
+    const { id, title, description, $widget }: Schema = schema;
     const required: Array<string> = schema.required || [];
     const properties: object = schema.properties || {};
-    const widgets: React.ReactNodeArray = [];
+    const propertyFields: React.ReactNodeArray = [];
     let keyDepMap: { [key: string]: string[] } | undefined = undefined;
 
     // 获取dependencies的值
@@ -94,11 +94,13 @@ function ObjectField(props: PropsWithChildren<ObjectFieldProps>): React.ReactEle
         isDependenciesDisplay = undefined;
       }
 
-      widgets.push(
+      // console.log(properties[key]);
+
+      propertyFields.push(
         <SchemaField schema={ properties[key] }
-          key={key}
+          key={ key }
           required={ isDependenciesDisplay || required.includes(key) } // 当被依赖时，表单必须填写
-          isDependenciesDisplay={ isDependenciesDisplay }
+          dependenciesDisplay={ isDependenciesDisplay }
         />
       );
     }
@@ -109,27 +111,27 @@ function ObjectField(props: PropsWithChildren<ObjectFieldProps>): React.ReactEle
       <span className={ styleName('object-description') } key="description">{ description }</span>
     ];
 
-    return (registry && $widget && $widget in registry.widgets)
-      ? registry.widgets[$widget](schema, form, $widget)
+    const { widgets } = registry;
+
+    return ($widget && $widget in widgets)
+      ? widgets[$widget](schema, form, $widget)
       : (
         <DefaultObjectFieldTemplate id={ id }
-          widgets={ widgets }
+          propertyFields={ propertyFields }
           header={ header }
         />
       );
   }
 
-  const content = objectFieldRender(schema);
-
   return (
     <Fragment>
-      { content }
+      { objectFieldRender(schema) }
     </Fragment>
   );
 }
 
 ObjectField.propTypes = {
-  schema: PropTypes.object,
+  schema: PropTypes.object
 };
 
 export default ObjectField;

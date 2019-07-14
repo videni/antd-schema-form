@@ -1,3 +1,5 @@
+import React from 'react';
+
 import {
   defaultString,
   textArea,
@@ -10,10 +12,19 @@ import {
   switchComponent,
   defaultArray,
   checkboxGroup,
-  multipleOrTags,
+  multipleOrTags
 } from './components/widget/widget';
 
-const registry: object = {
+export interface Registry {
+  widgets: {
+    [key: string]: any;
+  };
+  fields: {
+    [key: string]: React.ReactElement;
+  }
+}
+
+const registry: Registry = {
   widgets: {
     defaultString,
     textArea,
@@ -27,9 +38,9 @@ const registry: object = {
     defaultArray,
     checkboxGroup,
     multiple: multipleOrTags,
-    tags: multipleOrTags,
+    tags: multipleOrTags
   },
-  fields: require('./components/fields').default,
+  fields: require('./components/fields').default
 };
 
 export default registry;
