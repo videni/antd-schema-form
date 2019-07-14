@@ -6,7 +6,7 @@ import selectOptionsRender from '../../utils/selectOptionsRender';
 import styleName from '../../utils/styleName';
 import TableComponent from '../fields/ArrayField/TableComponent';
 import OneOfField from '../fields/OneOfField';
-import { Schema, StringSchema, NumberSchema, BooleanSchema, ArratSchema } from '../../types';
+import { Schema, StringSchema, NumberSchema, BooleanSchema, ArraySchema } from '../../types';
 
 /* string类型组件 */
 // 默认组件
@@ -144,14 +144,14 @@ export function switchComponent(
 /* Array类型组件 */
 // 默认组件
 export function defaultArray(
-  schema: ArratSchema,
+  schema: ArraySchema,
   option: GetFieldDecoratorOptions,
   form: WrappedFormUtils,
   required: boolean
 ): React.ReactNode {
   // @ts-ignore
   const { getFieldProps }: WrappedFormUtils = form;
-  const { id }: ArratSchema = schema;
+  const { id }: ArraySchema = schema;
   const props: any = omit(getFieldProps(id, option), ['ref']);
 
   return <TableComponent schema={ schema } { ...props } />;
@@ -159,26 +159,26 @@ export function defaultArray(
 
 // checkbox group
 export function checkboxGroup(
-  schema: ArratSchema,
+  schema: ArraySchema,
   option: GetFieldDecoratorOptions,
   form: WrappedFormUtils,
   required: boolean
 ): React.ReactNode {
   const { getFieldDecorator }: WrappedFormUtils = form;
-  const { id, $options = [] }: ArratSchema = schema;
+  const { id, $options = [] }: ArraySchema = schema;
 
   return getFieldDecorator(id, option)(<Checkbox.Group options={ $options } />);
 }
 
 // multiple and tags
 export function multipleOrTags(
-  schema: ArratSchema,
+  schema: ArraySchema,
   option: GetFieldDecoratorOptions,
   form: WrappedFormUtils,
   required: boolean
 ): React.ReactNode {
   const { getFieldDecorator }: WrappedFormUtils = form;
-  const { id, $options = [], $widget }: ArratSchema = schema;
+  const { id, $options = [], $widget }: ArraySchema = schema;
 
   return getFieldDecorator(id, option)(
     <Select className={ styleName('array-multiple') } mode={ $widget }>

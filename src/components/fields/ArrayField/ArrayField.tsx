@@ -8,7 +8,7 @@ import FormContext from '../../../context';
 import styleName from '../../../utils/styleName';
 import createArrayRules from './createArrayRules';
 import createElement from '../../../utils/createElement';
-import { ArratSchema, ContextValue } from '../../../types';
+import { ArraySchema, ContextValue } from '../../../types';
 
 /**
  * 当类型为array时的组件渲染
@@ -18,7 +18,7 @@ import { ArratSchema, ContextValue } from '../../../types';
  * 扩展属性包括：componentType, options, addDataInReverseOrder
  */
 interface ArrayFieldProps {
-  schema: ArratSchema;
+  schema: ArraySchema;
   required: boolean;
 }
 
@@ -29,7 +29,7 @@ function ArrayField(props: PropsWithChildren<ArrayFieldProps>): React.ReactEleme
 
   const { form, registry, languagePack }: ContextValue = context;
   const { schema, required }: ArrayFieldProps = props;
-  const { title, description, $widget, $defaultValue, $hidden }: ArratSchema = schema;
+  const { title, description, $widget, $defaultValue, $hidden }: ArraySchema = schema;
   const rules: Array<ValidationRule> = createArrayRules(languagePack, schema, required);
   const option: GetFieldDecoratorOptions = { rules };
   let isTableComponent: boolean = false; // 判断是否为table组件

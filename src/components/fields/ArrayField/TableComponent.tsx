@@ -16,7 +16,7 @@ import { formatTableValue, sortIndex } from './tableFunction';
 import ObjectField from '../ObjectField/ObjectField';
 import styleName from '../../../utils/styleName';
 import template from '../../../utils/template';
-import { Schema, StringSchema, NumberSchema, BooleanSchema, ArratSchema, ContextValue } from '../../../types';
+import { Schema, StringSchema, NumberSchema, BooleanSchema, ArraySchema, ContextValue } from '../../../types';
 
 // 拖拽相关变量
 const tableDragClassName: [string, string] = [
@@ -32,7 +32,7 @@ function tableClassName(hasErr: boolean): string {
 }
 
 interface TableComponentProps {
-  schema: ArratSchema;
+  schema: ArraySchema;
 }
 
 function TableComponent(props: PropsWithChildren<TableComponentProps>): React.ReactElement | null {
@@ -42,8 +42,8 @@ function TableComponent(props: PropsWithChildren<TableComponentProps>): React.Re
 
   const { form, languagePack, customTableRender }: ContextValue = context;
   const { schema }: TableComponentProps = props;
-  const { id, items, minItems, maxItems, $minItemsMessage, $maxItemsMessage }: ArratSchema = schema;
-  const { type, properties, title, $tableRender }: StringSchema | NumberSchema | BooleanSchema | ArratSchema = items;
+  const { id, items, minItems, maxItems, $minItemsMessage, $maxItemsMessage }: ArraySchema = schema;
+  const { type, properties, title, $tableRender }: StringSchema | NumberSchema | BooleanSchema | ArraySchema = items;
   // @ts-ignore
   const changeIndexRef: RefObject<Input> = useRef();
   let dragTargetId: string | undefined = undefined;    // 被拖拽的id

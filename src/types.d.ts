@@ -70,8 +70,8 @@ export interface BooleanSchema extends Schema {
   $defaultValue?: boolean;
 }
 
-export interface ArratSchema extends Schema {
-  items: StringSchema | NumberSchema | BooleanSchema | ArratSchema;
+export interface ArraySchema extends Schema {
+  items: StringSchema | NumberSchema | BooleanSchema | ArraySchema;
   $defaultValue?: Array<any>;
   $options?: Array<{ label: string; value: any }>;
   minItems?: number;
